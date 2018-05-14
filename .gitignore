@@ -1,8 +1,8 @@
-/target/
-/.idea
-.settings/
-target/
-cgod.iml
-.classpath
-.project
-/logs
+/cgod/target/
+/cgod/.idea
+/cgod/.settings/
+/cgod/target/
+/cgod/cgod.iml
+/cgod/.classpath
+/cgod/.project
+/cgod/logs
