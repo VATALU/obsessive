@@ -1,9 +1,9 @@
-package org.cgod.tool;
+package org.obsessive.tool;
 
-import org.cgod.annotation.REST;
-import org.cgod.annotation.Service;
-import org.cgod.util.ClassUtil;
-import org.cgod.util.ConfigUtil;
+import org.obsessive.util.annotation.REST;
+import org.obsessive.util.annotation.Service;
+import org.obsessive.util.ClassUtil;
+import org.obsessive.util.ConfigUtil;
 
 import java.util.HashSet;
 import java.util.Set;

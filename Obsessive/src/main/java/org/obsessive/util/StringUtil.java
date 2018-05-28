@@ -1,4 +1,4 @@
-package org.cgod.util;
+package org.obsessive.util;
 
 /**
  * 字符串处理类

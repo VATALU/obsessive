@@ -1,6 +1,6 @@
-package org.cgod.util;
+package org.obsessive.util;
 
-import org.cgod.ConfigConstant;
+import org.obsessive.ConfigConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

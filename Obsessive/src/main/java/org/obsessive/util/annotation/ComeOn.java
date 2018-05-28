@@ -1,4 +1,4 @@
-package org.cgod.annotation;
+package org.obsessive.util.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,6 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Dao {
+@Target({ElementType.FIELD})
+public @interface ComeOn {
 }

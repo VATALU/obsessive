@@ -1,6 +1,6 @@
-package org.cgod.tool;
+package org.obsessive.tool;
 
-import org.cgod.util.ReflectionUtil;
+import org.obsessive.util.ReflectionUtil;
 
 import java.util.HashMap;
 import java.util.Map;
