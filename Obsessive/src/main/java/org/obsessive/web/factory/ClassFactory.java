@@ -1,9 +1,8 @@
-package org.obsessive.tool;
+package org.obsessive.web.factory;
 
-import org.obsessive.util.annotation.REST;
-import org.obsessive.util.annotation.Service;
-import org.obsessive.util.ClassUtil;
-import org.obsessive.util.ConfigUtil;
+import org.obsessive.web.lang.annotation.Controller;
+import org.obsessive.web.lang.annotation.Service;
+import org.obsessive.web.util.ClassUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,11 +10,11 @@ import java.util.Set;
 /**
  * 类助手类
  */
-public class ClassHelper {
+public class ClassFactory {
     public static final Set<Class<?>> CLASS_SET;
 
     static {
-        String basePackage = ConfigUtil.getAppBasePackage();
+        String basePackage = ConfigFactory.getAppBasePackage();
         CLASS_SET = ClassUtil.getClassSet(basePackage);
     }
 
@@ -36,9 +35,9 @@ public class ClassHelper {
     public static Set<Class<?>> getServiceClassSet(){
         Set<Class<?>> classSet = new HashSet<Class<?>>();
 
-        for(Class<?> cls : CLASS_SET){
-            if(cls.isAnnotationPresent(Service.class)){
-                classSet.add(cls);
+        for(Class<?> clazz : CLASS_SET){
+            if(clazz.isAnnotationPresent(Service.class)){
+                classSet.add(clazz);
             }
         }
         return classSet;
@@ -50,9 +49,9 @@ public class ClassHelper {
      */
     public static Set<Class<?>> getRESTClassSet(){
         Set<Class<?>> classSet = new HashSet<Class<?>>();
-        for(Class<?> cls :CLASS_SET){
-            if(cls.isAnnotationPresent(REST.class)){
-                classSet.add(cls);
+        for(Class<?> clazz :CLASS_SET){
+            if(clazz.isAnnotationPresent(Controller.class)){
+                classSet.add(clazz);
             }
         }
         return classSet;

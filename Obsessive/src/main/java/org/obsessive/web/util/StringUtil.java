@@ -1,4 +1,4 @@
-package org.obsessive.util;
+package org.obsessive.web.util;
 
 /**
  * 字符串处理类

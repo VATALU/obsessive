@@ -1,4 +1,4 @@
-package org.obsessive.util;
+package org.obsessive.web.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +22,14 @@ public final class ClassUtil {
     }
 
     public static Class<?> loadClass(String className, boolean isInitialized) {
-        Class<?> cls;
+        Class<?> clazz;
         try {
-            cls = Class.forName(className, isInitialized, getClassLoader());
+            clazz = Class.forName(className, isInitialized, getClassLoader());
         } catch (ClassNotFoundException e) {
             LOGGER.error("load class failure", e);
             throw new RuntimeException(e);
         }
-        return cls;
+        return clazz;
     }
 
     public static Set<Class<?>> getClassSet(String packageName) {
@@ -99,8 +99,8 @@ public final class ClassUtil {
     }
 
     private static void doAddClass(Set<Class<?>> classSet, String className) {
-        Class<?> cls = loadClass(className, false);
-        classSet.add(cls);
+        Class<?> clazz = loadClass(className, false);
+        classSet.add(clazz);
     }
 
 }

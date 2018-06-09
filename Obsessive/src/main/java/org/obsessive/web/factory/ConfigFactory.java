@@ -1,6 +1,6 @@
-package org.obsessive.util;
+package org.obsessive.web.factory;
 
-import org.obsessive.ConfigConstant;
+import org.obsessive.web.ConfigConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,15 +16,16 @@ import java.util.Properties;
 /**
  * 配置文件读取类
  */
-public class ConfigUtil {
+public class ConfigFactory {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigFactory.class);
+
     private static final Map<String,String> CONFIG_MAP;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigUtil.class);
 
     static {
         Properties props;
         InputStream is = null;
-        CONFIG_MAP = new HashMap<String, String>();
+        CONFIG_MAP = new HashMap<String,String>();
         try {
             is = Thread.currentThread().getContextClassLoader().getResourceAsStream(ConfigConstant.CONFIG_FILE);
             if (is == null) {
