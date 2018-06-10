@@ -13,17 +13,12 @@ import java.util.Set;
  * 类助手类
  */
 public class ClassFactory {
-    public static Set<Class<?>> CLASS_SET = null;
+    public static final Set<Class<?>> CLASS_SET;
 
-//    static {
-//        String basePackage = ConfigFactory.getAppBasePackage();
-//        CLASS_SET = ClassUtil.getClassSet(basePackage);
-//    }
-
-    public ClassFactory(Class clazz) {
-        CLASS_SET=ClassUtil.getClassSet(clazz);
+    static {
+        String basePackage = ConfigFactory.getAppBasePackage();
+        CLASS_SET = ClassUtil.getClassSet(basePackage);
     }
-
 
     /**
      * 获取包下所有的注入的类

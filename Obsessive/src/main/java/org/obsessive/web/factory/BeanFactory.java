@@ -1,6 +1,7 @@
 package org.obsessive.web.factory;
 
 import org.obsessive.web.lang.annotation.Immit;
+import org.obsessive.web.lang.annotation.Value;
 import org.obsessive.web.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -13,9 +14,16 @@ public final class BeanFactory {
     /**
      * 注入类与注入实例的映射
      */
-    private static final Map<Class<?>, Object> BEANS_MAP = new HashMap<Class<?>, Object>();
+    private static final Map<Class<?>, Object> BEANS_MAP = new HashMap<>();
 
     static {
+        //获取所有注入的类
+        Set<Class<?>> beanClassSet = ClassFactory.getAnnotationClassSet();
+        //创建类的实例
+        for (Class<?> beanClass : beanClassSet) {
+            Object obj = ReflectionUtil.newInstance(beanClass);
+            BEANS_MAP.put(beanClass, obj);
+        }
         /**
          * 获取所有的注入类与注入实例之间的映射关系
          */
@@ -28,6 +36,7 @@ public final class BeanFactory {
                 Field[] beanFields = beanClass.getDeclaredFields();
                 if (beanFields != null && beanFields.length != 0) {
                     for (Field beanField : beanFields) {
+                        // @Immit 的 Field
                         if (beanField.isAnnotationPresent(Immit.class)) {
                             // 在Beans中获取BeanField对应的实例
                             Class<?> beanFiledClass = beanField.getType();
@@ -37,19 +46,13 @@ public final class BeanFactory {
                                 ReflectionUtil.setField(beanInstance, beanField, beanFieldInstance);
                             }
                         }
+                        // @Value 的 Field
+                        if(beanField.isAnnotationPresent(Value.class)) {
+                            ReflectionUtil.setField(beanInstance, beanField, beanField.getAnnotation(Value.class).value());
+                        }
                     }
                 }
             }
-        }
-    }
-
-    static {
-        //获取所有注入的类
-        Set<Class<?>> beanClassSet = ClassFactory.getAnnotationClassSet();
-        //创建类的实例
-        for (Class<?> beanClass : beanClassSet) {
-            Object obj = ReflectionUtil.newInstance(beanClass);
-            BEANS_MAP.put(beanClass, obj);
         }
     }
 

@@ -14,9 +14,7 @@ import java.util.List;
 public class ObsessiveStarter {
 
     public static void run() {
-        List<Class<?>> classList = Arrays.asList(ConfigFactory.class,
-                ClassFactory.class,
-                BeanFactory.class);
+        List<Class<?>> classList = Arrays.asList(ConfigFactory.class, ClassFactory.class, BeanFactory.class);
         classList.forEach(clazz -> ClassUtil.loadClass(clazz.getName(), true));
     }
 
