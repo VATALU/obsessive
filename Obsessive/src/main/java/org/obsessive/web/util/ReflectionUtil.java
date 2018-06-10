@@ -22,7 +22,7 @@ public class ReflectionUtil {
         try {
             obj = clazz.newInstance();
         } catch (Exception e) {
-            LOGGER.error("new instance failure", e);
+            LOGGER.error("new instance class[{}] failure", clazz.getName(), e);
             throw new RuntimeException(e);
         }
         return obj;
@@ -31,16 +31,17 @@ public class ReflectionUtil {
 
     /**
      * 设置类的属性值
+     *
      * @param obj
      * @param field
      * @param value
      */
-    public static void setField(Object obj, Field field, Object value){
+    public static void setField(Object obj, Field field, Object value) {
         try {
             field.setAccessible(true);
-            field.set(obj,value);
+            field.set(obj, value);
         } catch (Exception e) {
-            LOGGER.error("invoke method failure",e);
+            LOGGER.error("invoke method failure", e);
             throw new RuntimeException(e);
         }
 
