@@ -25,7 +25,7 @@ public class ConfigFactory {
     static {
         Properties props;
         InputStream is = null;
-        CONFIG_MAP = new HashMap<String,String>();
+        CONFIG_MAP = new HashMap<>();
         try {
             is = Thread.currentThread().getContextClassLoader().getResourceAsStream(ConfigConstant.CONFIG_FILE);
             if (is == null) {

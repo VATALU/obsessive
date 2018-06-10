@@ -20,11 +20,11 @@ public final class BeanFactory {
          * 获取所有的注入类与注入实例之间的映射关系
          */
         if (!BEANS_MAP.isEmpty()) {
-            // 遍历Beans
+            // 遍历BEANS_MAP
             for (Map.Entry<Class<?>, Object> beanEntry : BEANS_MAP.entrySet()) {
                 Class<?> beanClass = beanEntry.getKey();
                 Object beanInstance = beanEntry.getValue();
-                // 获取Bean类的所有成员变量
+                // 获取 Bean 类的所有成员变量
                 Field[] beanFields = beanClass.getDeclaredFields();
                 if (beanFields != null && beanFields.length != 0) {
                     for (Field beanField : beanFields) {

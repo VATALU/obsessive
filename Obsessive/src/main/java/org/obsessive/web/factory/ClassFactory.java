@@ -13,12 +13,17 @@ import java.util.Set;
  * 类助手类
  */
 public class ClassFactory {
-    public static final Set<Class<?>> CLASS_SET;
+    public static Set<Class<?>> CLASS_SET = null;
 
-    static {
-        String basePackage = ConfigFactory.getAppBasePackage();
-        CLASS_SET = ClassUtil.getClassSet(basePackage);
+//    static {
+//        String basePackage = ConfigFactory.getAppBasePackage();
+//        CLASS_SET = ClassUtil.getClassSet(basePackage);
+//    }
+
+    public ClassFactory(Class clazz) {
+        CLASS_SET=ClassUtil.getClassSet(clazz);
     }
+
 
     /**
      * 获取包下所有的注入的类
@@ -26,7 +31,7 @@ public class ClassFactory {
      * @return
      */
     public static Set<Class<?>> getAnnotationClassSet() {
-        Set<Class<?>> annotationClassSet = new HashSet<Class<?>>();
+        Set<Class<?>> annotationClassSet = new HashSet<>();
         annotationClassSet.addAll(getServiceClassSet());
         annotationClassSet.addAll(getControllerClassSet());
         annotationClassSet.addAll(getRepositoryClassSet());
@@ -39,7 +44,7 @@ public class ClassFactory {
      * @return
      */
     public static Set<Class<?>> getServiceClassSet() {
-        Set<Class<?>> classSet = new HashSet<Class<?>>();
+        Set<Class<?>> classSet = new HashSet<>();
 
         for (Class<?> clazz : CLASS_SET) {
             if (clazz.isAnnotationPresent(Service.class)) {
