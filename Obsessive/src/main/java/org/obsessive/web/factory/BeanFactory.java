@@ -1,6 +1,6 @@
 package org.obsessive.web.factory;
 
-import org.obsessive.web.lang.annotation.Immit;
+import org.obsessive.web.lang.annotation.Inject;
 import org.obsessive.web.lang.annotation.Value;
 import org.obsessive.web.util.ReflectionUtil;
 
@@ -28,7 +28,7 @@ public final class BeanFactory {
          * 获取所有的注入类与注入实例之间的映射关系
          */
         if (!BEANS_MAP.isEmpty()) {
-            // 遍历BEANS_MAP
+            // 遍历 BEANS_MAP
             for (Map.Entry<Class<?>, Object> beanEntry : BEANS_MAP.entrySet()) {
                 Class<?> beanClass = beanEntry.getKey();
                 Object beanInstance = beanEntry.getValue();
@@ -37,8 +37,8 @@ public final class BeanFactory {
                 if (beanFields != null && beanFields.length != 0) {
                     for (Field beanField : beanFields) {
                         // @Immit 的 Field
-                        if (beanField.isAnnotationPresent(Immit.class)) {
-                            // 在Beans中获取BeanField对应的实例
+                        if (beanField.isAnnotationPresent(Inject.class)) {
+                            // 在 BEANS_MAP 中根据 Type 获取 BeanField 对应的实例
                             Class<?> beanFiledClass = beanField.getType();
                             Object beanFieldInstance = BEANS_MAP.get(beanFiledClass);
                             if (beanFieldInstance != null) {

@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Get {
-    String route();
+@Target({ElementType.FIELD})
+public @interface Inject {
 }
