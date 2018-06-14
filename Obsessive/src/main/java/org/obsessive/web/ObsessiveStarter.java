@@ -13,9 +13,11 @@ import java.util.List;
  */
 public class ObsessiveStarter {
 
-    public static void run() {
-        List<Class<?>> classList = Arrays.asList(ConfigFactory.class, ClassFactory.class, BeanFactory.class);
-        classList.forEach(clazz -> ClassUtil.loadClass(clazz.getName(), true));
+
+    public static void run(Class<?> clazz) {
+        ConfigFactory configFactory = new ConfigFactory();
+        ClassFactory classFactory = new ClassFactory(clazz);
+        BeanFactory beanFactory = new BeanFactory(classFactory);
     }
 
 }

@@ -52,10 +52,5 @@ public class ConfigFactory {
         }
     }
 
-    public static String getAppBasePackage() {
-        return CONFIG_MAP.get(ConfigConstant.APP_BASE_PACKAGE);
-    }
-
-
 }
 

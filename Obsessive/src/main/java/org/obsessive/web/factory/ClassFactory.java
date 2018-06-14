@@ -6,6 +6,8 @@ import org.obsessive.web.lang.annotation.Repository;
 import org.obsessive.web.lang.annotation.Service;
 import org.obsessive.web.util.ClassUtil;
 
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,11 +15,17 @@ import java.util.Set;
  * 类助手类
  */
 public class ClassFactory {
-    public static final Set<Class<?>> CLASS_SET;
 
-    static {
-        String basePackage = ConfigFactory.getAppBasePackage();
-        CLASS_SET = ClassUtil.getClassSet(basePackage);
+    //注解类的集合
+    public final Set<Class<?>> CLASS_SET = new HashSet<>();
+
+    //注解类类型的集合
+    private final Set<Class<? extends Annotation>> annotationSet = new HashSet<>();
+
+    public ClassFactory(Class<?> clazz) {
+        annotationSet.addAll(Arrays.asList(Service.class, Controller.class, Repository.class, Component.class));
+        //加载 clazz 目录同级别以及以下的类
+        CLASS_SET.addAll(ClassUtil.getClassSet(clazz.getPackage().getName()));
     }
 
     /**
@@ -25,70 +33,26 @@ public class ClassFactory {
      *
      * @return
      */
-    public static Set<Class<?>> getAnnotationClassSet() {
-        Set<Class<?>> annotationClassSet = new HashSet<>();
-        annotationClassSet.addAll(getServiceClassSet());
-        annotationClassSet.addAll(getControllerClassSet());
-        annotationClassSet.addAll(getRepositoryClassSet());
-        annotationClassSet.addAll(getComponentClassSet());
-        return annotationClassSet;
-    }
-
-    /**
-     * 获取包下所有注入的 Service 类
-     * @return
-     */
-    public static Set<Class<?>> getServiceClassSet() {
+    public Set<Class<?>> getAnnotationClassSet() {
         Set<Class<?>> classSet = new HashSet<>();
-
-        for (Class<?> clazz : CLASS_SET) {
-            if (clazz.isAnnotationPresent(Service.class)) {
-                classSet.add(clazz);
-            }
-        }
+        annotationSet.forEach(annotation -> {
+            classSet.addAll(getAnnotationClassSet(annotation));
+        });
         return classSet;
     }
 
     /**
-     * 获取包下所有注入的 Controller 类
-     *
+     * 通过注解类来获取对应的被注解类的集合
+     * @param annotation
      * @return
      */
-    public static Set<Class<?>> getControllerClassSet() {
-        Set<Class<?>> classSet = new HashSet<Class<?>>();
-        for (Class<?> clazz : CLASS_SET) {
-            if (clazz.isAnnotationPresent(Controller.class)) {
+    public Set<Class<?>> getAnnotationClassSet(Class<? extends Annotation> annotation) {
+        Set<Class<?>> classSet = new HashSet<>();
+        CLASS_SET.forEach(clazz->{
+            if(clazz.isAnnotationPresent(annotation)) {
                 classSet.add(clazz);
             }
-        }
-        return classSet;
-    }
-
-    /**
-     * 获取包下所有注入的 Repository 类
-     * @return
-     */
-    public static Set<Class<?>> getRepositoryClassSet() {
-        Set<Class<?>> classSet = new HashSet<Class<?>>();
-        for (Class<?> clazz : CLASS_SET) {
-            if (clazz.isAnnotationPresent(Repository.class)) {
-                classSet.add(clazz);
-            }
-        }
-        return classSet;
-    }
-
-    /**
-     * 获取包下所有注入的 Component 类
-     * @return
-     */
-    public static Set<Class<?>> getComponentClassSet() {
-        Set<Class<?>> classSet = new HashSet<Class<?>>();
-        for (Class<?> clazz : CLASS_SET) {
-            if (clazz.isAnnotationPresent(Component.class)) {
-                classSet.add(clazz);
-            }
-        }
+        });
         return classSet;
     }
 }

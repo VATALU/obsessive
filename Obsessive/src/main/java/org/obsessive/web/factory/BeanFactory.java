@@ -14,16 +14,18 @@ public final class BeanFactory {
     /**
      * 注入类与注入实例的映射
      */
-    private static final Map<Class<?>, Object> BEANS_MAP = new HashMap<>();
+    private final Map<Class<?>, Object> BEANS_MAP = new HashMap<>();
 
-    static {
+
+    public BeanFactory(ClassFactory classFactory) {
         //获取所有注入的类
-        Set<Class<?>> beanClassSet = ClassFactory.getAnnotationClassSet();
+        Set<Class<?>> beanClassSet = classFactory.getAnnotationClassSet();
         //创建类的实例
         for (Class<?> beanClass : beanClassSet) {
             Object obj = ReflectionUtil.newInstance(beanClass);
             BEANS_MAP.put(beanClass, obj);
         }
+
         /**
          * 获取所有的注入类与注入实例之间的映射关系
          */
@@ -36,7 +38,7 @@ public final class BeanFactory {
                 Field[] beanFields = beanClass.getDeclaredFields();
                 if (beanFields != null && beanFields.length != 0) {
                     for (Field beanField : beanFields) {
-                        // @Immit 的 Field
+                        // @Inject 的 Field
                         if (beanField.isAnnotationPresent(Inject.class)) {
                             // 在 BEANS_MAP 中根据 Type 获取 BeanField 对应的实例
                             Class<?> beanFiledClass = beanField.getType();
@@ -56,12 +58,13 @@ public final class BeanFactory {
         }
     }
 
+
     /**
      * 获取 Bean 映射
      *
      * @return
      */
-    public static Map<Class<?>, Object> getBeansMap() {
+    public Map<Class<?>, Object> getBeansMap() {
         return BEANS_MAP;
     }
 
@@ -69,7 +72,7 @@ public final class BeanFactory {
      * 获取 Bean 实例
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getBean(Class<T> clazz) {
+    public <T> T getBean(Class<T> clazz) {
         if (!BEANS_MAP.containsKey(clazz)) {
             throw new RuntimeException("can not get "+clazz.getName());
         }
