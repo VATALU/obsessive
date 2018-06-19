@@ -1,15 +1,15 @@
 package org.vatalu.service;
 
 
-import org.obsessive.web.lang.annotation.Immit;
+import org.obsessive.web.lang.annotation.Inject;
 import org.obsessive.web.lang.annotation.Service;
 import org.obsessive.web.lang.annotation.Value;
 import org.vatalu.Repository.UserRepository;
 
 @Service
 public class UserService {
-    @Immit
+    @Inject
     private UserRepository userRepository;
-    @Value("123")
+    @Value("Obsessive")
     private String value;
 }

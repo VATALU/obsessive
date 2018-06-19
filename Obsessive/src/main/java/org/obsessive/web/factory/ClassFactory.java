@@ -4,7 +4,7 @@ import org.obsessive.web.lang.annotation.Component;
 import org.obsessive.web.lang.annotation.Controller;
 import org.obsessive.web.lang.annotation.Repository;
 import org.obsessive.web.lang.annotation.Service;
-import org.obsessive.web.util.ClassUtil;
+import org.obsessive.web.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class ClassFactory {
     public ClassFactory(Class<?> clazz) {
         annotationSet.addAll(Arrays.asList(Service.class, Controller.class, Repository.class, Component.class));
         //加载 clazz 目录同级别以及以下的类
-        CLASS_SET.addAll(ClassUtil.getClassSet(clazz.getPackage().getName()));
+        CLASS_SET.addAll(ClassUtils.getClassSet(clazz.getPackage().getName()));
     }
 
     /**

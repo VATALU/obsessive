@@ -2,7 +2,9 @@ package org.obsessive.web.factory;
 
 import org.obsessive.web.lang.annotation.Inject;
 import org.obsessive.web.lang.annotation.Value;
-import org.obsessive.web.util.ReflectionUtil;
+import org.obsessive.web.util.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -11,24 +13,21 @@ import java.util.Set;
 
 public final class BeanFactory {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeanFactory.class);
+
     /**
      * 注入类与注入实例的映射
      */
     private final Map<Class<?>, Object> BEANS_MAP = new HashMap<>();
 
-
-    public BeanFactory(ClassFactory classFactory) {
-        //获取所有注入的类
-        Set<Class<?>> beanClassSet = classFactory.getAnnotationClassSet();
+    public BeanFactory(Set<Class<?>> beanClassSet) {
         //创建类的实例
-        for (Class<?> beanClass : beanClassSet) {
-            Object obj = ReflectionUtil.newInstance(beanClass);
+        beanClassSet.forEach(beanClass -> {
+            Object obj = ReflectionUtils.newInstance(beanClass);
             BEANS_MAP.put(beanClass, obj);
-        }
+        });
 
-        /**
-         * 获取所有的注入类与注入实例之间的映射关系
-         */
+        //获取所有的注入类与注入实例之间的映射关系
         if (!BEANS_MAP.isEmpty()) {
             // 遍历 BEANS_MAP
             for (Map.Entry<Class<?>, Object> beanEntry : BEANS_MAP.entrySet()) {
@@ -45,12 +44,12 @@ public final class BeanFactory {
                             Object beanFieldInstance = BEANS_MAP.get(beanFiledClass);
                             if (beanFieldInstance != null) {
                                 // 通过反射初始化BeanField的值
-                                ReflectionUtil.setField(beanInstance, beanField, beanFieldInstance);
+                                ReflectionUtils.setField(beanInstance, beanField, beanFieldInstance);
                             }
                         }
                         // @Value 的 Field
-                        if(beanField.isAnnotationPresent(Value.class)) {
-                            ReflectionUtil.setField(beanInstance, beanField, beanField.getAnnotation(Value.class).value());
+                        if (beanField.isAnnotationPresent(Value.class)) {
+                            ReflectionUtils.setField(beanInstance, beanField, beanField.getAnnotation(Value.class).value());
                         }
                     }
                 }
@@ -74,10 +73,24 @@ public final class BeanFactory {
     @SuppressWarnings("unchecked")
     public <T> T getBean(Class<T> clazz) {
         if (!BEANS_MAP.containsKey(clazz)) {
-            throw new RuntimeException("can not get "+clazz.getName());
+            throw new RuntimeException("can not get " + clazz.getName());
         }
         return (T) BEANS_MAP.get(clazz);
     }
 
+    /**
+     * 获取对应类集合的Map实例
+     */
+    public Map<Class<?>, Object> getBeans(Set<Class<?>> classSet) {
+        Map<Class<?>, Object> classObjectMap = new HashMap<>();
+        classSet.forEach(clazz -> {
+            if(BEANS_MAP.containsKey(clazz)) {
+                classObjectMap.put(clazz,BEANS_MAP.get(clazz));
+            } else {
+                LOGGER.info("class[{}] is not found",clazz.getName());
+            }
+        });
+        return classObjectMap;
+    }
 
 }

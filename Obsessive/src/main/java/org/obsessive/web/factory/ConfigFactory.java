@@ -21,7 +21,6 @@ public class ConfigFactory {
 
     private static final Map<String,String> CONFIG_MAP;
 
-
     static {
         Properties props;
         InputStream is = null;
@@ -52,5 +51,8 @@ public class ConfigFactory {
         }
     }
 
+    public static String getServerPort() {
+        return CONFIG_MAP.get(ConfigConstant.SERVER_PORT);
+    }
 }
 

@@ -13,8 +13,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public final class ClassUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
+public final class ClassUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtils.class);
 
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
@@ -77,17 +78,17 @@ public final class ClassUtil {
             String fileName = file.getName();
             if (file.isFile()) {
                 String className = fileName.substring(0, fileName.lastIndexOf("."));
-                if (StringUtil.isNotEmpty(packageName)) {
+                if (StringUtils.isNotEmpty(packageName)) {
                     className = packageName + "." + className;
                 }
                 doAddClass(classSet, className);
             } else {
                 String subPackagePath = fileName;
-                if (StringUtil.isNotEmpty(packagePath)) {
+                if (StringUtils.isNotEmpty(packagePath)) {
                     subPackagePath = packagePath + "/" + subPackagePath;
                 }
                 String subPackageName = fileName;
-                if (StringUtil.isNotEmpty(packageName)) {
+                if (StringUtils.isNotEmpty(packageName)) {
                     subPackageName = packageName + "." + subPackageName;
                 }
                 addClass(classSet, subPackagePath, subPackageName);
