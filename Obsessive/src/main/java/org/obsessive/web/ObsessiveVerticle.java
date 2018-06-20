@@ -38,7 +38,9 @@ public class ObsessiveVerticle extends AbstractVerticle {
                             HttpMethod httpMethod = route.method();
                             String consumes = route.consumes();
                             String produces = route.produces();
-                            router.route(httpMethod, path).consumes(consumes).produces(produces).handler(routingContext -> {
+                            router.route(httpMethod, path)
+//                                    .consumes(consumes).produces(produces)
+                                    .handler(routingContext -> {
                                 ReflectionUtils.invokeMethod(beanFactory.getBean(controllerClass),method,routingContext);
                             });
                         }

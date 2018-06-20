@@ -43,7 +43,6 @@ public class ReflectionUtils {
             result=method.invoke(obj,args);
         } catch (Exception e) {
             LOGGER.error("invoke method failure",e);
-            System.out.println(e);
             throw new RuntimeException(e);
         }
         return result;

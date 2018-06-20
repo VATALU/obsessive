@@ -15,6 +15,7 @@ public class UserController {
     @Route("/some/path")
     public void login(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
-        response.write("{\"user\":\"vatalu\"}");
+        response.setChunked(true);
+        response.write("{\"user\":\"vatalu\"}").end();
     }
 }
