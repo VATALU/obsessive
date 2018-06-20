@@ -11,9 +11,7 @@ import java.util.Optional;
 public class Main {
 
     public static void main(String[] args) {
-//        ObsessiveStarter.run(Main.class);
-        User user = new User();
-        System.out.println(user.getClass()==User.class);
+        ObsessiveStarter.run(Main.class);
     }
 
 }

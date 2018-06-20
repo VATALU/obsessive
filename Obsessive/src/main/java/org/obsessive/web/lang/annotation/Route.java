@@ -11,11 +11,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Route {
 
-    String path();
+    String value();
 
-    HttpMethod method();
+    HttpMethod method() default HttpMethod.GET;
 
-    String consumes();
+    String consumes() default "*/json";
 
-    String produces();
+    String produces() default "application/json";
 }

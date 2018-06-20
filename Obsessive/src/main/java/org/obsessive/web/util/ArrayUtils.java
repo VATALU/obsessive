@@ -7,6 +7,6 @@ public class ArrayUtils {
     }
 
     public static boolean isNotEmpty(Object[] array) {
-        return !isNotEmpty(array);
+        return !isEmpty(array);
     }
 }
