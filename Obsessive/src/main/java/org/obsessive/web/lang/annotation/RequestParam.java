@@ -1,21 +1,16 @@
 package org.obsessive.web.lang.annotation;
 
-import io.vertx.core.http.HttpMethod;
+import org.obsessive.web.ValueConstant;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Route {
+public @interface RequestParam {
+    String value() default "";
 
-    String value();
-
-    HttpMethod[] method() default {};
-
-    String[] consumes() default {};
-
-    String[] produces() default {};
+    String defaultValue() default ValueConstant.DEFAULT_NONE;
 }

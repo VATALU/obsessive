@@ -9,11 +9,17 @@ public class StringUtils {
         return !isEmpty(s);
     }
 
-    private static boolean isEmpty(String s) {
+    public static boolean isEmpty(String s) {
         if (s != null) {
             s = s.trim();
         }
         return s == null || s.length() == 0;
     }
 
+    public static String getOrDefault(String value, String defaultValue){
+        if(isNotEmpty(value)) {
+            return value;
+        }
+        return defaultValue;
+    }
 }

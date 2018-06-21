@@ -1,21 +1,11 @@
 package org.obsessive.web.lang.annotation;
 
-import io.vertx.core.http.HttpMethod;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Route {
-
-    String value();
-
-    HttpMethod[] method() default {};
-
-    String[] consumes() default {};
-
-    String[] produces() default {};
+public @interface RequestBody {
 }

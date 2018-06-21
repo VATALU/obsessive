@@ -19,7 +19,7 @@ import java.util.Properties;
 public class ConfigFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigFactory.class);
 
-    private static final Map<String,String> CONFIG_MAP;
+    private static final Map<String, String> CONFIG_MAP;
 
     static {
         Properties props;
@@ -32,10 +32,10 @@ public class ConfigFactory {
             }
             props = new Properties();
             props.load(is);
-            Enumeration en=props.propertyNames();
+            Enumeration en = props.propertyNames();
             while (en.hasMoreElements()) {
-                String key=(String) en.nextElement();
-                String property=props.getProperty(key);
+                String key = (String) en.nextElement();
+                String property = props.getProperty(key);
                 CONFIG_MAP.put(key, property);
             }
         } catch (IOException e) {
@@ -51,8 +51,15 @@ public class ConfigFactory {
         }
     }
 
-    public static String getServerPort() {
-        return CONFIG_MAP.get(ConfigConstant.SERVER_PORT);
+    public static int getServerPort() {
+        if (CONFIG_MAP.containsKey(ConfigConstant.SERVER_PORT))
+            return Integer.valueOf(CONFIG_MAP.get(ConfigConstant.SERVER_PORT));
+        else
+            return ConfigConstant.DEFAULT_SERVER_PORT;
+    }
+
+    public static String getServerHost() {
+        return CONFIG_MAP.getOrDefault(ConfigConstant.SERVER_HOST,ConfigConstant.DEFAULT_SERVER_HOST);
     }
 }
 
