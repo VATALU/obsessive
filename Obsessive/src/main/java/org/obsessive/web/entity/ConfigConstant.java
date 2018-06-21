@@ -1,4 +1,4 @@
-package org.obsessive.web;
+package org.obsessive.web.entity;
 
 public class ConfigConstant {
 

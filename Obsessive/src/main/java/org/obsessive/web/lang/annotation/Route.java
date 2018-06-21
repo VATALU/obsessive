@@ -13,7 +13,7 @@ public @interface Route {
 
     String value();
 
-    HttpMethod[] method() default {};
+    HttpMethod[] method() default {HttpMethod.GET};
 
     String[] consumes() default {};
 
