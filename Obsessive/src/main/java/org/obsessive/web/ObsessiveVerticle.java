@@ -4,7 +4,6 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import org.obsessive.web.entity.HttpStatusCode;
@@ -17,7 +16,6 @@ import org.obsessive.web.util.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.*;
 
 public class ObsessiveVerticle extends AbstractVerticle {
@@ -121,7 +119,7 @@ public class ObsessiveVerticle extends AbstractVerticle {
                                                 }
                                             }
 
-                                        } else if (a instanceof RequestBody) {
+                                        } else if (a instanceof BodyParam) {
                                             //获取类名
                                             Class<?> paramTypeClass = paramTypeClasses[i];
                                             String jsonStr = routingContext.getBodyAsString();
