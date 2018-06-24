@@ -18,10 +18,10 @@ public class ReflectionUtils {
      * @param clazz
      * @return
      */
-    public static Object newInstance(Class<?> clazz) {
-        Object obj;
+    public static <T> T newInstance(Class<?> clazz) {
+        T obj;
         try {
-            obj = clazz.newInstance();
+            obj = (T)clazz.newInstance();
         } catch (Exception e) {
             LOGGER.error("new instance class[{}] failure", clazz.getName(), e);
             throw new RuntimeException(e);

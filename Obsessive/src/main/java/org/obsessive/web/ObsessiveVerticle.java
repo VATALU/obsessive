@@ -7,7 +7,6 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import org.obsessive.web.entity.HttpStatusCode;
-import org.obsessive.web.entity.ValueConstant;
 import org.obsessive.web.factory.BeanFactory;
 import org.obsessive.web.factory.ClassFactory;
 import org.obsessive.web.factory.ConfigFactory;
@@ -94,36 +93,24 @@ public class ObsessiveVerticle extends AbstractVerticle {
                                                 sendError(HttpStatusCode.NOT_FOUND, httpServerResponse);
                                             }
 
-                                        } else if (a instanceof RequestParam) {
+                                        } else if (a instanceof QueryParam) {
                                             //获取表单数据
-                                            String paramName = ((RequestParam) a).value();
-                                            String defaultValue = ((RequestParam) a).defaultValue();
-                                            boolean required = ((RequestParam) a).required();
+                                            String paramName = ((QueryParam) a).value();
 
                                             //获取 url 中的键值对
                                             String value = httpServerRequest.getParam(paramName);
-                                            //获取请求 form 数据
-                                            if (StringUtils.isEmpty(value)) {
-                                                value = httpServerRequest.getFormAttribute(paramName);
-                                            }
-                                            if(arg==null) {
-                                                if (required && StringUtils.isEmpty(value)) {
-                                                    sendError(HttpStatusCode.NOT_FOUND, httpServerResponse);
-                                                }else if(!required && StringUtils.isEmpty(value)) {
-                                                    if(!defaultValue.equals(ValueConstant.DEFAULT_NONE)) {
-                                                        Class<?> clazz = paramTypeClasses[i];
-                                                        arg = defaultValue;
-                                                    }
-                                                } else {
-                                                    arg=value;
-                                                }
-                                            }
 
+                                            if (StringUtils.isEmpty(value)) {
+                                                sendError(HttpStatusCode.NOT_FOUND, httpServerResponse);
+                                            } else if (arg == null) {
+                                                arg = value;
+                                            }
                                         } else if (a instanceof BodyParam) {
                                             //获取类名
                                             Class<?> paramTypeClass = paramTypeClasses[i];
                                             String jsonStr = routingContext.getBodyAsString();
-                                            System.out.println(jsonStr);
+                                            String json = JsonUtils.fromJson(jsonStr, paramTypeClass).getClass().getName();
+                                            System.out.println(json);
                                             if (arg == null)
                                                 arg = JsonUtils.fromJson(jsonStr, paramTypeClass);
                                         }
