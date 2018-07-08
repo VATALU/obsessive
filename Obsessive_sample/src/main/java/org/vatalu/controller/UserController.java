@@ -6,9 +6,6 @@ import org.obsessive.web.lang.annotation.*;
 import org.vatalu.model.User;
 import org.vatalu.service.UserService;
 
-import java.util.List;
-import java.util.Map;
-
 @Controller
 public class UserController {
     @Inject
