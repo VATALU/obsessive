@@ -2,18 +2,14 @@ package org.obsessive.web;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
-import org.obsessive.web.entity.HttpStatusCode;
 import org.obsessive.web.factory.BeanFactory;
 import org.obsessive.web.factory.ClassFactory;
 import org.obsessive.web.factory.ConfigFactory;
 import org.obsessive.web.lang.annotation.*;
 import org.obsessive.web.util.*;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -65,61 +61,7 @@ public class ObsessiveVerticle extends AbstractVerticle {
                                 vertxRoute.produces(produce);
                             }
 
-                            vertxRoute.handler(routingContext -> {
-                                HttpServerRequest httpServerRequest = routingContext.request();
-                                HttpServerResponse httpServerResponse = routingContext.response();
-
-                                //获取所有的参数的注解
-                                Annotation[][] annotations = method.getParameterAnnotations();
-
-                                //方法的每个参数值
-                                List<Object> args = new ArrayList<>();
-
-                                //对于每个注解对应的值与请求值绑定
-                                for (Annotation[] annotation : annotations) {
-                                    Object arg = null;
-                                    for (int i = 0; i < annotation.length; i++) {
-                                        Annotation a = annotation[i];
-                                        if (a instanceof PathParam) {
-
-                                            String paramName = ((PathParam) a).value();
-                                            String paramValue = httpServerRequest.getParam(paramName);
-                                            //判断参数是否为空
-                                            if (StringUtils.isNotEmpty(paramValue)) {
-                                                if (arg == null)
-                                                    arg = paramValue;
-                                            } else {
-                                                //404
-                                                sendError(HttpStatusCode.NOT_FOUND, httpServerResponse);
-                                            }
-
-                                        } else if (a instanceof QueryParam) {
-                                            //获取表单数据
-                                            String paramName = ((QueryParam) a).value();
-
-                                            //获取 url 中的键值对
-                                            String value = httpServerRequest.getParam(paramName);
-
-                                            if (StringUtils.isEmpty(value)) {
-                                                sendError(HttpStatusCode.NOT_FOUND, httpServerResponse);
-                                            } else if (arg == null) {
-                                                arg = value;
-                                            }
-                                        } else if (a instanceof BodyParam) {
-                                            //获取类名
-                                            Class<?> paramTypeClass = paramTypeClasses[i];
-                                            String jsonStr = routingContext.getBodyAsString();
-                                            String json = JsonUtils.fromJson(jsonStr, paramTypeClass).getClass().getName();
-                                            System.out.println(json);
-                                            if (arg == null)
-                                                arg = JsonUtils.fromJson(jsonStr, paramTypeClass);
-                                        }
-                                    }
-                                    args.add(arg);
-                                }
-                                Object result = ReflectionUtils.invokeMethod(beanFactory.getBean(controllerClass), method, args.toArray());
-                                httpServerResponse.end(JsonUtils.toJson(result));
-                            });
+                            vertxRoute.handler(routingContext -> ReflectionUtils.invokeMethod(beanFactory.getBean(controllerClass), method, routingContext));
                         }
                     });
                 }
@@ -133,10 +75,6 @@ public class ObsessiveVerticle extends AbstractVerticle {
         Router router = Router.router(vertx);
         initRouter(router);
         vertx.createHttpServer().requestHandler(router::accept).listen(ConfigFactory.getServerPort(), ConfigFactory.getServerHost());
-    }
-
-    private void sendError(HttpStatusCode httpStatusCode, HttpServerResponse response) {
-        response.setStatusCode(httpStatusCode.code()).end();
     }
 
 }

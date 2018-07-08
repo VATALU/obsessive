@@ -15,7 +15,5 @@ public class ConfigConstant {
     private ConfigConstant() {
     }
 
-    ;
-
 }
 
