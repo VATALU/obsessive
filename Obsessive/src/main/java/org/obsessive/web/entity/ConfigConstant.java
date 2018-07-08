@@ -8,6 +8,8 @@ public class ConfigConstant {
 
     public final static String SERVER_HOST = "server.host";
 
+    public final static String SERVER_CONTEXT_PATH = "server.context-path";
+
     public final static int DEFAULT_SERVER_PORT = 8080;
 
     public final static String DEFAULT_SERVER_HOST = "127.0.0.1";

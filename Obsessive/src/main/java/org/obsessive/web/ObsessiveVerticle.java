@@ -43,7 +43,7 @@ public class ObsessiveVerticle extends AbstractVerticle {
                             //获取所有的参数类型
                             Class<?>[] paramTypeClasses = method.getParameterTypes();
                             Route route = method.getAnnotation(Route.class);
-                            String path = route.value();
+                            String path = ConfigFactory.getServerContextPath()+route.value();
                             HttpMethod[] httpMethods = route.method();
                             String[] consumes = route.consumes();
                             String[] produces = route.produces();

@@ -61,5 +61,9 @@ public class ConfigFactory {
     public static String getServerHost() {
         return CONFIG_MAP.getOrDefault(ConfigConstant.SERVER_HOST,ConfigConstant.DEFAULT_SERVER_HOST);
     }
+
+    public static String getServerContextPath() {
+        return CONFIG_MAP.getOrDefault(ConfigConstant.SERVER_CONTEXT_PATH,"");
+    }
 }
 

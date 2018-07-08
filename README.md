@@ -95,7 +95,12 @@ and response
 You also can config your server port or server host in `Obsessive.properties`.
 
     server.port=8081
-    server.host=obsessive
+    server.host=localhost
+    server.context-path=/obsessive
+
+Then you can get response from
+
+    http://localhost:8081/obsessive/users/{userId}
 
 ## 4.Future
 Request Param Parser
