@@ -50,7 +50,7 @@ public class UserController {
         String userId = routingContext.request().getParam("userId");
         User user = userService.findUserById(userId);
         routingContext.response().setChunked(true).write("Hello World " + user.getUserName() + ", Welcome to " + value).end();
-        }
+    }
 }
 ```
 
@@ -74,7 +74,6 @@ public class UserService {
 ``` Java
 @Repository
 public class UserRepository {
-
     //simple demo
     public User findUserById(long id) {
         User user = new User();
