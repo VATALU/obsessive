@@ -92,7 +92,7 @@ and response
 
     Hello World VATALU, Welcome to Obsessive.
 
-You also can config your server port or server host in Obsessive.properties.
+You also can config your server port or server host in `Obsessive.properties`.
 
     server.port=8081
     server.host=obsessive
