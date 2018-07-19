@@ -2,17 +2,16 @@ package org.obsessive.web.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class JsonUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
+public class JsonUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
 
     public static <T> T fromJson(String jsonStr, Class<T> clazz) {
-        if (StringUtils.isNotEmpty(jsonStr)) {
+        if (StringUtil.isNotEmpty(jsonStr)) {
             try {
                 return new ObjectMapper().readValue(jsonStr, clazz);
             } catch (IOException e) {

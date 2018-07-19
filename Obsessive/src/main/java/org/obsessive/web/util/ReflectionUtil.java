@@ -9,8 +9,8 @@ import java.lang.reflect.Method;
 /**
  * 反射工具类
  */
-public class ReflectionUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
+public class ReflectionUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
 
     /**
      * 获取类的实例

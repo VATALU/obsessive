@@ -30,12 +30,12 @@ public class ObsessiveVerticle extends AbstractVerticle {
         router.route().handler(BodyHandler.create());
 
         Set<Class<?>> controllerClassSet = classFactory.getAnnotationClassSet(Controller.class);
-        if (CollectionUtils.isNotEmpty(controllerClassSet)) {
+        if (CollectionUtil.isNotEmpty(controllerClassSet)) {
 
             controllerClassSet.forEach(controllerClass -> {
                 //获取controller类中的方法
                 Method[] methods = controllerClass.getDeclaredMethods();
-                if (ArrayUtils.isNotEmpty(methods)) {
+                if (ArrayUtil.isNotEmpty(methods)) {
                     //遍历类中所有方法
                     Arrays.asList(methods).forEach(method -> {
                         //判断是否是被 Route 注解
@@ -61,7 +61,7 @@ public class ObsessiveVerticle extends AbstractVerticle {
                                 vertxRoute.produces(produce);
                             }
 
-                            vertxRoute.handler(routingContext -> ReflectionUtils.invokeMethod(beanFactory.getBean(controllerClass), method, routingContext));
+                            vertxRoute.handler(routingContext -> ReflectionUtil.invokeMethod(beanFactory.getBean(controllerClass), method, routingContext));
                         }
                     });
                 }

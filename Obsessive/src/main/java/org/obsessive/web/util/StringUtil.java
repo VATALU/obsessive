@@ -3,7 +3,7 @@ package org.obsessive.web.util;
 /**
  * 字符串处理类
  */
-public class StringUtils {
+public class StringUtil {
 
     public static boolean isNotEmpty(String s) {
         return !isEmpty(s);

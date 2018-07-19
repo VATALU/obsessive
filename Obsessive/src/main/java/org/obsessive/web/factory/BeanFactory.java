@@ -2,7 +2,7 @@ package org.obsessive.web.factory;
 
 import org.obsessive.web.lang.annotation.Inject;
 import org.obsessive.web.lang.annotation.Value;
-import org.obsessive.web.util.ReflectionUtils;
+import org.obsessive.web.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ public final class BeanFactory {
     public BeanFactory(Set<Class<?>> beanClassSet) {
         //创建类的实例
         beanClassSet.forEach(beanClass -> {
-            Object obj = ReflectionUtils.newInstance(beanClass);
+            Object obj = ReflectionUtil.newInstance(beanClass);
             BEANS_MAP.put(beanClass, obj);
         });
 
@@ -44,12 +44,12 @@ public final class BeanFactory {
                             Object beanFieldInstance = BEANS_MAP.get(beanFiledClass);
                             if (beanFieldInstance != null) {
                                 // 通过反射初始化BeanField的值
-                                ReflectionUtils.setField(beanInstance, beanField, beanFieldInstance);
+                                ReflectionUtil.setField(beanInstance, beanField, beanFieldInstance);
                             }
                         }
                         // @Value 的 Field
                         if (beanField.isAnnotationPresent(Value.class)) {
-                            ReflectionUtils.setField(beanInstance, beanField, beanField.getAnnotation(Value.class).value());
+                            ReflectionUtil.setField(beanInstance, beanField, beanField.getAnnotation(Value.class).value());
                         }
                     }
                 }
