@@ -1,4 +1,4 @@
-package org.obsessive.web.injection;
+package org.obsessive.web.ioc;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
