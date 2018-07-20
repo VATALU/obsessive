@@ -5,11 +5,19 @@ import java.util.function.Supplier;
 
 public class MapUtil {
 
+    /** if map doesn't contain the value, put the supplier get value in this key.
+     * @param kvConcurrentMap
+     * @param key
+     * @param vSupplier
+     * @param <K>
+     * @param <V>
+     * @return
+     */
     public static <K, V> V increase(final ConcurrentMap<K, V> kvConcurrentMap, final K key, final Supplier<V> vSupplier) {
         V v = kvConcurrentMap.get(key);
-        if (null == v) {
+        if (v == null) {
             v = vSupplier.get();
-            if (null != v) {
+            if (v != null) {
                 kvConcurrentMap.put(key, v);
             }
         }

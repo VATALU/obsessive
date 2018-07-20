@@ -11,12 +11,13 @@ public class CommonUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtil.class);
 
     public static <T> T getValue(final ExceptionThrowableSupplier<T> supplier, final Object... params) {
-        return getValue(null,supplier,params);
+        return getValue(null, supplier, params);
     }
 
     /**
      * only params are all not null will return not null
      * if supplier.get is null return default value
+     *
      * @param defaultValue
      * @param supplier
      * @param params
@@ -29,7 +30,7 @@ public class CommonUtil {
         try {
             if (match) {
                 t = supplier.get();
-                if (null == t) {
+                if (t == null) {
                     t = defaultValue;
                 }
             }
