@@ -1,9 +1,8 @@
-package org.obsessive.web.injection.util;
+package org.obsessive.web.util;
 
-import org.obsessive.web.injection.Storage;
+import org.obsessive.web.ioc.Storage;
 import org.obsessive.web.log.Record;
 import org.obsessive.web.util.function.Func;
-import org.obsessive.web.util.MapUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -13,9 +12,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @SuppressWarnings("unchecked")
-public final class ReflectionUtil {
+public final class ReflectUtil {
 
-    private static final Record RECORD = Record.get(ReflectionUtil.class);
+    private static final Record RECORD = Record.get(ReflectUtil.class);
 
     /**
      * create and return instance
@@ -137,11 +136,19 @@ public final class ReflectionUtil {
         Func.exec(() ->
                 Func.safeExec(() -> {
                     final Field field = instance.getClass().getDeclaredField(fieldName);
+                    setField(instance, field, value);
+                }, RECORD), instance, fieldName);
+    }
+
+    public static <T> void setField(final Object instance, final Field field, final T value) {
+        Func.exec(() ->
+                Func.safeExec(() -> {
                     if (!field.isAccessible()) {
                         field.setAccessible(true);
                     }
                     field.set(instance, value);
-                }, RECORD), instance, fieldName);
+                }, RECORD), field, value);
+
     }
 
     public static <T> T invokeMethod(final Object instance, final String methodName, final Object... params) {
@@ -175,6 +182,6 @@ public final class ReflectionUtil {
     }
 
     // forbid to instance
-    private ReflectionUtil() {
+    private ReflectUtil() {
     }
 }
