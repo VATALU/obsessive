@@ -61,7 +61,7 @@ public class ObsessiveVerticle extends AbstractVerticle {
                                 vertxRoute.produces(produce);
                             }
 
-                            vertxRoute.handler(routingContext -> ReflectionUtil.invokeMethod(beanFactory.getBean(controllerClass), method, routingContext));
+                            vertxRoute.handler(routingContext -> ReflectUtil.invokeMethod(beanFactory.getBean(controllerClass), method, routingContext));
                         }
                     });
                 }
