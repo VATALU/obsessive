@@ -73,7 +73,7 @@ public final class BeanFactory {
     @SuppressWarnings("unchecked")
     public <T> T getBean(Class<T> clazz) {
         if (!BEANS_MAP.containsKey(clazz)) {
-            throw new RuntimeException("can not get " + clazz.getName());
+            throw new RuntimeException("can not getJvm " + clazz.getName());
         }
         return (T) BEANS_MAP.get(clazz);
     }

@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 public class MapUtil {
 
-    /** if map doesn't contain the value, put the supplier get value in this key.
+    /** if map doesn't contain the value, put the supplier getJvm value in this key.
      * @param kvConcurrentMap
      * @param key
      * @param vSupplier

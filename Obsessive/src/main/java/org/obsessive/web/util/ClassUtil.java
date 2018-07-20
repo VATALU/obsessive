@@ -64,7 +64,7 @@ public final class ClassUtil {
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("class set get fail", e);
+            LOGGER.error("class set getJvm fail", e);
             throw new RuntimeException(e);
         }
         return classSet;
