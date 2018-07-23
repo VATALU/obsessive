@@ -1,9 +1,9 @@
 # Obsessive
 Obsessive is a featherweight framework for JavaWeb development based on Vert.x. Obsessive is aimed to help you to code in the style of spring-boot. 
 ## 1.Feature
-    * Follow the COC principle
-    * IoC
-    * Use Annotation for Configuration
+* Follow the COC principle
+* IoC
+* Use Annotation for Configuration
 ## 2.Environment
 ### 2.1 Download and install
     git clone https://github.com/VATALU/Obsessive.git
