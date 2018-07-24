@@ -16,7 +16,7 @@ Creare a web app project by Maven and append dependency in your `pom.xml`
     <dependency>
             <groupId>org.vatalu</groupId>
             <artifactId>Obsessive</artifactId>
-            <version>1.0.0-beta</version>
+            <version>1.0.1-beta</version>
     </dependency>
 
 ## 3.Example
