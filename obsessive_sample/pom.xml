@@ -11,7 +11,7 @@
     <dependencies>
         <dependency>
             <groupId>org.vatalu</groupId>
-            <artifactId>Obsessive</artifactId>
+            <artifactId>obsessive</artifactId>
             <version>1.0.1-beta</version>
         </dependency>
     </dependencies>

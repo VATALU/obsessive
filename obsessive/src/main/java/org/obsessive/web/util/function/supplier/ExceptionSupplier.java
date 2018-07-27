@@ -1,7 +1,7 @@
 package org.obsessive.web.util.function.supplier;
 
 /**
- * This functional interface coudl throw out java.lang.Exception
+ * This functional interface could throw out java.lang.Exception
  */
 @FunctionalInterface
 public interface ExceptionSupplier<T> {

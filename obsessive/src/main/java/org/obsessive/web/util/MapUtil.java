@@ -1,6 +1,7 @@
 package org.obsessive.web.util;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -11,19 +12,19 @@ public class MapUtil {
     /**
      * if map doesn't contain the value, put the supplier getJvm value in this key.
      *
-     * @param kvConcurrentMap
+     * @param kvMap
      * @param key
      * @param vSupplier
      * @param <K>
      * @param <V>
      * @return
      */
-    public static <K, V> V increase(final ConcurrentMap<K, V> kvConcurrentMap, final K key, final Supplier<V> vSupplier) {
-        V v = kvConcurrentMap.get(key);
+    public static <K, V> V increase(final Map<K, V> kvMap, final K key, final Supplier<V> vSupplier) {
+        V v = kvMap.get(key);
         if (v == null) {
             v = vSupplier.get();
             if (v != null) {
-                kvConcurrentMap.put(key, v);
+                kvMap.put(key, v);
             }
         }
         return v;
@@ -43,7 +44,7 @@ public class MapUtil {
         final ConcurrentMap<K, V> kvConcurrentHashMap = new ConcurrentHashMap<>();
         if (object.size() > 0) {
             for (final E item : object) {
-                if (null != item) {
+                if (item != null) {
                     final K key = keyFunc.apply(item);
                     final V value = valueFunc.apply(item);
                     if (key != null && value != null) {
@@ -54,4 +55,6 @@ public class MapUtil {
         }
         return kvConcurrentHashMap;
     }
+
+
 }

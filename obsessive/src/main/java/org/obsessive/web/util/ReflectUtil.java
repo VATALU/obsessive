@@ -1,12 +1,14 @@
 package org.obsessive.web.util;
 
+import com.esotericsoftware.reflectasm.ConstructorAccess;
+import com.esotericsoftware.reflectasm.FieldAccess;
+import com.esotericsoftware.reflectasm.MethodAccess;
 import org.obsessive.web.ioc.Storage;
 import org.obsessive.web.log.Record;
-import org.obsessive.web.util.function.Func;
+import org.obsessive.web.util.function.Fn;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
@@ -37,8 +39,8 @@ public final class ReflectUtil {
      * @return
      */
     public static <T> T instance(final Class<?> clazz, Object... params) {
-        final Object o = Func.getJvm(() -> construct(clazz, params), clazz);
-        return Func.getJvm(() -> (T) o, o);
+        final Object o = Fn.getJvm(() -> construct(clazz, params), clazz);
+        return Fn.getJvm(() -> (T) o, o);
     }
 
     /**
@@ -65,7 +67,7 @@ public final class ReflectUtil {
      */
     public static <T> T singleton(final Class<?> clazz, final Object... params) {
         final Object o = MapUtil.increase(Storage.SINGLETON_BEANS, clazz.getName(), () -> instance(clazz, params));
-        return Func.getJvm(() -> (T) o, o);
+        return Fn.getJvm(() -> (T) o, o);
     }
 
     /**
@@ -76,8 +78,8 @@ public final class ReflectUtil {
      */
     public static Class<?> clazz(final String className) {
         return MapUtil.increase(Storage.CLASSES, className,
-                () -> Func.getJvm(
-                        () -> Thread.currentThread().getContextClassLoader().loadClass(className), className)
+                () -> Fn.getJvm(
+                        () -> ClassUtil.getClassLoader().loadClass(className), className)
         );
     }
 
@@ -90,7 +92,7 @@ public final class ReflectUtil {
      * @return
      */
     private static <T> T construct(final Class<?> clazz, final Object... params) {
-        return Func.getJvm(() -> {
+        return Fn.getJvm(() -> {
             T t = null;
             final Constructor<?>[] constructors = clazz.getDeclaredConstructors();
             for (Constructor<?> constructor : constructors) {
@@ -101,7 +103,7 @@ public final class ReflectUtil {
                 //compare argument length
                 if (params.length == constructor.getParameterTypes().length) {
                     final Object o = constructor.newInstance(params);
-                    t = Func.getJvm(() -> (T) o, o);
+                    t = Fn.getJvm(() -> (T) o, o);
                 }
             }
             return t;
@@ -116,8 +118,8 @@ public final class ReflectUtil {
      * @return
      */
     private static <T> T construct(final Class<?> clazz) {
-        final Object o = Func.getJvm(() -> clazz.newInstance(), clazz);
-        return Func.getJvm(() -> (T) o, o);
+        final Object o = Fn.getJvm(() -> ConstructorAccess.get(clazz).newInstance(), clazz);
+        return Fn.getJvm(() -> (T) o, o);
     }
 
     /**
@@ -133,55 +135,48 @@ public final class ReflectUtil {
     }
 
     public static <T> void setField(final Object instance, final String fieldName, final T value) {
-        Func.exec(() ->
-                Func.safeExec(() -> {
-                    final Field field = instance.getClass().getDeclaredField(fieldName);
-                    setField(instance, field, value);
+        Fn.exec(() ->
+                Fn.safeExec(() -> {
+                    FieldAccess fieldAccess = FieldAccess.get(instance.getClass());
+                    fieldAccess.set(instance,fieldName,value);
                 }, RECORD), instance, fieldName);
     }
 
     public static <T> void setField(final Object instance, final Field field, final T value) {
-        Func.exec(() ->
-                Func.safeExec(() -> {
-                    if (!field.isAccessible()) {
-                        field.setAccessible(true);
-                    }
-                    field.set(instance, value);
+        Fn.exec(() ->
+                Fn.safeExec(() -> {
+                    setField(instance,field.getName(),value);
                 }, RECORD), field, value);
 
     }
 
     public static <T> T invokeMethod(final Object instance, final String methodName, final Object... params) {
-        return Func.get(() -> {
-            Method method = null;
-            try {
-                //TODO distinguish different methods have the same name.
-                method = instance.getClass().getMethod(methodName);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-            final Method m = method;
-            return Func.get(() -> invokeMethod(instance, m, params), method);
+        return Fn.get(() -> {
+            final MethodAccess access = MethodAccess.get(instance.getClass());
+            Object result = null;
+            result = access.invoke(instance, methodName, params);
+
+//            Method method = null;
+//            try {
+//                //TODO distinguish different methods have the same name.
+//                method = instance.getClass().getMethod(methodName);
+//            } catch (NoSuchMethodException e) {
+//                e.printStackTrace();
+//            }
+
+            final Object o = result;
+            return Fn.get(() -> (T) o, o);
         }, instance, params);
     }
 
     public static <T> T invokeMethod(final Object instance, final Method method, final Object... params) {
-        return Func.get(() -> {
-            method.setAccessible(true);
-            Object result = null;
-            try {
-                result = method.invoke(instance, params);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            final Object o = result;
-            return Func.get(() -> (T) o, o);
+        return Fn.get(() -> {
+            final String methodName = method.getName();
+            return Fn.get(() -> invokeMethod(instance, methodName, params), params, methodName);
         }, instance, params);
     }
 
-    // forbid to instance
+    // forbid to be instanced
     private ReflectUtil() {
     }
 }

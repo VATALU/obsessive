@@ -1,7 +1,7 @@
 package org.obsessive.web.factory;
 
 import org.obsessive.web.lang.annotation.Inject;
-import org.obsessive.web.lang.annotation.bind.Value;
+import org.obsessive.web.lang.annotation.Value;
 import org.obsessive.web.util.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

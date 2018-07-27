@@ -1,6 +1,6 @@
 package org.obsessive.web.factory;
 
-import org.obsessive.web.entity.ConfigConstant;
+import org.obsessive.web.entity.constant.ConfigConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

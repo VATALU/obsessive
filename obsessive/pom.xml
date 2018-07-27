@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.vatalu</groupId>
-    <artifactId>Obsessive</artifactId>
+    <artifactId>obsessive</artifactId>
     <version>1.0.1-beta</version>
 
     <dependencies>
@@ -30,6 +30,12 @@
             <version>2.9.6</version>
         </dependency>
 
+        <!-- reflect -->
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>reflectasm</artifactId>
+            <version>1.11.7</version>
+        </dependency>
     </dependencies>
 
     <build>

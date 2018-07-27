@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 public final class ClassUtil {
 
@@ -70,7 +72,8 @@ public final class ClassUtil {
         return classSet;
     }
 
-    private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
+
+    private static void addClass(final Set<Class<?>> classSet, final String packagePath, final String packageName) {
         File[] files = new File(packagePath).listFiles(
                 file -> (file.isFile() && file.getName().endsWith(".class")) || file.isDirectory()
         );
@@ -96,7 +99,7 @@ public final class ClassUtil {
         }
     }
 
-    private static void doAddClass(Set<Class<?>> classSet, String className) {
+    private static void doAddClass(final Set<Class<?>> classSet, final String className) {
         Class<?> clazz = loadClass(className, false);
         classSet.add(clazz);
     }
