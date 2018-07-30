@@ -21,6 +21,7 @@ public class ObsessiveStarter {
 
     public static void run(final Class<?> clazz) {
         ConfigFactory configFactory = new ConfigFactory();
+        //TODO bio
         ClassFactory classFactory = new ClassFactory(clazz);
         BeanFactory beanFactory = new BeanFactory(classFactory.getAnnotationClassSet());
         final Vertx vertx = Vertx.vertx();

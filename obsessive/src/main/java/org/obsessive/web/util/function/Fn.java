@@ -32,14 +32,14 @@ public class Fn {
      * @return T
      */
     public static <T> T getJvm(final T defaultValue, final JvmSupplier<T> supplier, final Object... params) {
-        // supplier mustn't null
+        //TODO supplier mustn't null
         Objects.requireNonNull(supplier);
         T t = null;
         final boolean match = Arrays.stream(params).allMatch(Objects::nonNull);
-        // why not call Defend.safeGet ?
+        //TODO why not call Defend.safeGet ?
         try {
             if (match) {
-                // use Optional
+                //TODO use Optional
                 t = Optional.ofNullable(supplier.get()).orElse(defaultValue);
             }
         } catch (Exception e) {
