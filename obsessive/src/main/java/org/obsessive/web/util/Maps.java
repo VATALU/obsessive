@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class MapUtil {
+public class Maps {
 
     /**
      * if map doesn't contain the value, put the supplier getJvm value in this key.

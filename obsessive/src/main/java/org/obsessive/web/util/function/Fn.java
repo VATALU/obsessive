@@ -1,10 +1,10 @@
 package org.obsessive.web.util.function;
 
 import org.obsessive.web.log.Record;
-import org.obsessive.web.util.MapUtil;
-import org.obsessive.web.util.function.executor.ExceptionExecutor;
+import org.obsessive.web.util.Maps;
+import org.obsessive.web.util.function.executor.ThrowingExecutor;
 import org.obsessive.web.util.function.executor.Executor;
-import org.obsessive.web.util.function.supplier.ExceptionSupplier;
+import org.obsessive.web.util.function.supplier.ThrowingSupplier;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -16,7 +16,7 @@ public class Fn {
 
     private static final Record RECORD = Record.get(Fn.class);
 
-    public static <T> T getJvm(final ExceptionSupplier<T> supplier, final Object... params) {
+    public static <T> T getJvm(final ThrowingSupplier<T> supplier, final Object... params) {
         return getJvm(null, supplier, params);
     }
 
@@ -30,7 +30,7 @@ public class Fn {
      * @param <T>
      * @return T
      */
-    public static <T> T getJvm(final T defaultValue, final ExceptionSupplier<T> supplier, final Object... params) {
+    public static <T> T getJvm(final T defaultValue, final ThrowingSupplier<T> supplier, final Object... params) {
         T t = null;
         final boolean match = Arrays.stream(params).allMatch(Objects::nonNull);
         try {
@@ -98,12 +98,12 @@ public class Fn {
     /**
      * execute function throws throwable
      *
-     * @param exceptionExecutor
+     * @param throwingExecutor
      * @param record
      */
-    public static void safeExec(final ExceptionExecutor exceptionExecutor, final Record record) {
+    public static void safeExec(final ThrowingExecutor throwingExecutor, final Record record) {
         try {
-            exceptionExecutor.execute();
+            throwingExecutor.execute();
         } catch (final Throwable throwable) {
             if (record != null) {
                 record.jvm(throwable);
@@ -112,7 +112,7 @@ public class Fn {
     }
 
     public static <K, V, E> ConcurrentMap<K, V> zipper(final E[] object, final Function<E, K> keyFunc, final Function<E, V> valueFunc) {
-        return MapUtil.zipper(Arrays.asList(object),keyFunc,valueFunc);
+        return Maps.zipper(Arrays.asList(object),keyFunc,valueFunc);
     }
 
     public static boolean is(final Object item) {

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class AnnotationUtil {
+public final class Annotations {
 
     /**
      * get the class's annotation map

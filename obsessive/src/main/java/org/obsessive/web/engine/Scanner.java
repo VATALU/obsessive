@@ -4,9 +4,9 @@ import org.obsessive.web.entity.constant.AnnotationConstant;
 import org.obsessive.web.lang.annotation.*;
 import org.obsessive.web.lang.annotation.Value;
 import org.obsessive.web.log.Record;
-import org.obsessive.web.util.AnnotationUtil;
+import org.obsessive.web.util.Annotations;
 import org.obsessive.web.util.ClassUtil;
-import org.obsessive.web.util.ReflectUtil;
+import org.obsessive.web.util.Reflections;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -24,7 +24,7 @@ public class Scanner {
         //get all class
         Set<Class<?>> classSet = ClassUtil.getClassSet(clazz.getPackage().getName());
         //filter annotationed class
-        Set<Class<?>> annotatedClsSet = AnnotationUtil.getAnnotatedCls(classSet, AnnotationConstant.MODULE);
+        Set<Class<?>> annotatedClsSet = Annotations.getAnnotatedCls(classSet, AnnotationConstant.MODULE);
         return annotatedClsSet.stream().collect(Collectors.toConcurrentMap(Class::getName,annotatedCls->annotatedCls));
     }
 
@@ -34,7 +34,7 @@ public class Scanner {
 
         annotatedClsMap.forEach((className,clazz)->{
             //TODO null detection
-            Object bean = ReflectUtil.instance(clazz);
+            Object bean = Reflections.instance(clazz);
             singletonBeans.put(className,bean);
         });
         singletonBeans.forEach((className, bean)->{
@@ -44,11 +44,11 @@ public class Scanner {
             fieldStream.filter(field -> field.isAnnotationPresent(Inject.class)).forEach(field -> {
                 String fieldName = field.getName();
                 Object instance = singletonBeans.get(fieldName);
-                ReflectUtil.setField(bean,field,instance);
+                Reflections.setField(bean,field,instance);
             });
             // @Value
             fieldStream.filter(field -> field.isAnnotationPresent(Value.class)).forEach(field ->
-                ReflectUtil.setField(bean,field,field.getAnnotation(Value.class).value()));
+                Reflections.setField(bean,field,field.getAnnotation(Value.class).value()));
         });
         return singletonBeans;
     }

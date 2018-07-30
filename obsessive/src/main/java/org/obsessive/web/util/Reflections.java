@@ -14,9 +14,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @SuppressWarnings("unchecked")
-public final class ReflectUtil {
+public final class Reflections {
 
-    private static final Record RECORD = Record.get(ReflectUtil.class);
+    private static final Record RECORD = Record.get(Reflections.class);
 
     /**
      * create and return instance
@@ -66,7 +66,7 @@ public final class ReflectUtil {
      * @return
      */
     public static <T> T singleton(final Class<?> clazz, final Object... params) {
-        final Object o = MapUtil.increase(Storage.SINGLETON_BEANS, clazz.getName(), () -> instance(clazz, params));
+        final Object o = Maps.increase(Storage.SINGLETON_BEANS, clazz.getName(), () -> instance(clazz, params));
         return Fn.getJvm(() -> (T) o, o);
     }
 
@@ -77,7 +77,7 @@ public final class ReflectUtil {
      * @return
      */
     public static Class<?> clazz(final String className) {
-        return MapUtil.increase(Storage.CLASSES, className,
+        return Maps.increase(Storage.CLASSES, className,
                 () -> Fn.getJvm(
                         () -> ClassUtil.getClassLoader().loadClass(className), className)
         );
@@ -177,6 +177,6 @@ public final class ReflectUtil {
     }
 
     // forbid to be instanced
-    private ReflectUtil() {
+    private Reflections() {
     }
 }

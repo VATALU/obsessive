@@ -9,6 +9,8 @@ import org.obsessive.web.factory.ClassFactory;
 import org.obsessive.web.factory.ConfigFactory;
 import org.obsessive.web.lang.annotation.*;
 import org.obsessive.web.util.*;
+import org.obsessive.web.util.Arrays;
+import org.obsessive.web.util.Collections;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -30,14 +32,14 @@ public class ObsessiveVerticle extends AbstractVerticle {
         router.route().handler(BodyHandler.create());
 
         Set<Class<?>> controllerClassSet = classFactory.getAnnotationClassSet(Controller.class);
-        if (CollectionUtil.isNotEmpty(controllerClassSet)) {
+        if (Collections.isNotEmpty(controllerClassSet)) {
 
             controllerClassSet.forEach(controllerClass -> {
                 //获取controller类中的方法
                 Method[] methods = controllerClass.getDeclaredMethods();
-                if (ArrayUtil.isNotEmpty(methods)) {
+                if (Arrays.isNotEmpty(methods)) {
                     //遍历类中所有方法
-                    Arrays.asList(methods).forEach(method -> {
+                    java.util.Arrays.asList(methods).forEach(method -> {
                         //判断是否是被 Route 注解
                         if (method.isAnnotationPresent(Route.class)) {
                             //获取所有的参数类型
@@ -61,7 +63,7 @@ public class ObsessiveVerticle extends AbstractVerticle {
                                 vertxRoute.produces(produce);
                             }
 
-                            vertxRoute.handler(routingContext -> ReflectUtil.invokeMethod(beanFactory.getBean(controllerClass), method, routingContext));
+                            vertxRoute.handler(routingContext -> Reflections.invokeMethod(beanFactory.getBean(controllerClass), method, routingContext));
                         }
                     });
                 }
