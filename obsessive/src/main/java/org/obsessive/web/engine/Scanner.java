@@ -5,7 +5,7 @@ import org.obsessive.web.lang.annotation.*;
 import org.obsessive.web.lang.annotation.Value;
 import org.obsessive.web.log.Record;
 import org.obsessive.web.util.Annotations;
-import org.obsessive.web.util.ClassUtil;
+import org.obsessive.web.util.Clazz;
 import org.obsessive.web.util.Reflections;
 
 import java.lang.reflect.Field;
@@ -22,7 +22,7 @@ public class Scanner {
     //scan class under this package
     public static ConcurrentMap<String, Class<?>> scan (final Class<?> clazz) {
         //get all class
-        Set<Class<?>> classSet = ClassUtil.getClassSet(clazz.getPackage().getName());
+        Set<Class<?>> classSet = Clazz.getClassSet(clazz.getPackage().getName());
         //filter annotationed class
         Set<Class<?>> annotatedClsSet = Annotations.getAnnotatedCls(classSet, AnnotationConstant.MODULE);
         return annotatedClsSet.stream().collect(Collectors.toConcurrentMap(Class::getName,annotatedCls->annotatedCls));

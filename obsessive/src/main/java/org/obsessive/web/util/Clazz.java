@@ -5,52 +5,36 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
-public final class ClassUtil {
+public final class Clazz {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Clazz.class);
 
-    public static ClassLoader getClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
-    }
-
-    public static Class<?> loadClass(String className, boolean isInitialized) {
-        Class<?> clazz;
-        try {
-            clazz = Class.forName(className, isInitialized, getClassLoader());
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("load class failure", e);
-            throw new RuntimeException(e);
-        }
-        return clazz;
-    }
-
+    /**
+     * @param packageName
+     * @return
+     */
     public static Set<Class<?>> getClassSet(String packageName) {
-        Set<Class<?>> classSet = new HashSet<Class<?>>();
-        try {
-            Enumeration<URL> urls = getClassLoader().getResources(packageName.replace(".", "/"));
-            while (urls.hasMoreElements()) {
-                URL url = urls.nextElement();
-                if (url != null) {
+        Set<Class<?>> classSet = new HashSet<>();
+        Enumeration<URL> urls = getClassLoader().getResources(packageName.replace(".", "/"));
+        while (urls.hasMoreElements()) {
+            Optional.of(urls.nextElement()).ifPresent(url -> {
+                try {
                     String protocol = url.getProtocol();
-                    if (protocol.equals("file")) {
+                    if (Objects.equals(protocol, "file")) {
                         String packagePath = url.getPath().replace("%20", "");
                         addClass(classSet, packagePath, packageName);
-                    } else if (protocol.equals("jar")) {
+                    } else if (Objects.equals(protocol, "jar")) {
                         //扫描 Jar 包
                         JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
-                        if (jarURLConnection != null) {
+//                        if (jarURLConnection != null) {
                             JarFile jarFile = jarURLConnection.getJarFile();
-                            if (jarFile != null) {
+//                            if (jarFile != null) {
                                 Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
                                 while (jarEntryEnumeration.hasMoreElements()) {
                                     JarEntry jarEntry = jarEntryEnumeration.nextElement();
@@ -60,14 +44,15 @@ public final class ClassUtil {
                                         doAddClass(classSet, className);
                                     }
                                 }
-                            }
-                        }
+//                            }
+//                        }
                     }
+                } catch (IOException e) {
+                    LOGGER.error("class set getJvm fail", e);
+                    throw new RuntimeException(e);
                 }
-            }
-        } catch (IOException e) {
-            LOGGER.error("class set getJvm fail", e);
-            throw new RuntimeException(e);
+            });
+
         }
         return classSet;
     }
@@ -81,17 +66,17 @@ public final class ClassUtil {
             String fileName = file.getName();
             if (file.isFile()) {
                 String className = fileName.substring(0, fileName.lastIndexOf("."));
-                if (StringUtil.isNotEmpty(packageName)) {
+                if (Strings.isNotEmpty(packageName)) {
                     className = packageName + "." + className;
                 }
                 doAddClass(classSet, className);
             } else {
                 String subPackagePath = fileName;
-                if (StringUtil.isNotEmpty(packagePath)) {
+                if (Strings.isNotEmpty(packagePath)) {
                     subPackagePath = packagePath + "/" + subPackagePath;
                 }
                 String subPackageName = fileName;
-                if (StringUtil.isNotEmpty(packageName)) {
+                if (Strings.isNotEmpty(packageName)) {
                     subPackageName = packageName + "." + subPackageName;
                 }
                 addClass(classSet, subPackagePath, subPackageName);
@@ -100,8 +85,23 @@ public final class ClassUtil {
     }
 
     private static void doAddClass(final Set<Class<?>> classSet, final String className) {
-        Class<?> clazz = loadClass(className, false);
+        Class<?> clazz = forName(className, false);
         classSet.add(clazz);
     }
 
+
+    public static ClassLoader getClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
+
+    public static Class<?> forName(String className, boolean isInitialized) {
+        Class<?> clazz;
+        try {
+            clazz = Class.forName(className, isInitialized, getClassLoader());
+        } catch (ClassNotFoundException e) {
+            LOGGER.error("load class failure", e);
+            throw new RuntimeException(e);
+        }
+        return clazz;
+    }
 }

@@ -2,12 +2,13 @@ package org.obsessive.web.util.function;
 
 import org.obsessive.web.log.Record;
 import org.obsessive.web.util.Maps;
-import org.obsessive.web.util.function.executor.ThrowingExecutor;
+import org.obsessive.web.util.function.executor.JvmExecutor;
 import org.obsessive.web.util.function.executor.Executor;
-import org.obsessive.web.util.function.supplier.ThrowingSupplier;
+import org.obsessive.web.util.function.supplier.JvmSupplier;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -16,7 +17,7 @@ public class Fn {
 
     private static final Record RECORD = Record.get(Fn.class);
 
-    public static <T> T getJvm(final ThrowingSupplier<T> supplier, final Object... params) {
+    public static <T> T getJvm(final JvmSupplier<T> supplier, final Object... params) {
         return getJvm(null, supplier, params);
     }
 
@@ -30,15 +31,16 @@ public class Fn {
      * @param <T>
      * @return T
      */
-    public static <T> T getJvm(final T defaultValue, final ThrowingSupplier<T> supplier, final Object... params) {
+    public static <T> T getJvm(final T defaultValue, final JvmSupplier<T> supplier, final Object... params) {
+        // supplier mustn't null
+        Objects.requireNonNull(supplier);
         T t = null;
         final boolean match = Arrays.stream(params).allMatch(Objects::nonNull);
+        // why not call Defend.safeGet ?
         try {
             if (match) {
-                t = supplier.get();
-                if (t == null) {
-                    t = defaultValue;
-                }
+                // use Optional
+                t = Optional.ofNullable(supplier.get()).orElse(defaultValue);
             }
         } catch (Exception e) {
             RECORD.error(e.toString());
@@ -98,17 +100,11 @@ public class Fn {
     /**
      * execute function throws throwable
      *
-     * @param throwingExecutor
+     * @param jvmExecutor
      * @param record
      */
-    public static void safeExec(final ThrowingExecutor throwingExecutor, final Record record) {
-        try {
-            throwingExecutor.execute();
-        } catch (final Throwable throwable) {
-            if (record != null) {
-                record.jvm(throwable);
-            }
-        }
+    public static void safeExec(final JvmExecutor jvmExecutor, final Record record) {
+        Defend.safeExec(jvmExecutor, record);
     }
 
     public static <K, V, E> ConcurrentMap<K, V> zipper(final E[] object, final Function<E, K> keyFunc, final Function<E, V> valueFunc) {

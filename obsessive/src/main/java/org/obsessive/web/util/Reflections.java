@@ -79,7 +79,7 @@ public final class Reflections {
     public static Class<?> clazz(final String className) {
         return Maps.increase(Storage.CLASSES, className,
                 () -> Fn.getJvm(
-                        () -> ClassUtil.getClassLoader().loadClass(className), className)
+                        () -> Clazz.getClassLoader().loadClass(className), className)
         );
     }
 
