@@ -1,5 +1,6 @@
 package org.obsessive.web.factory;
 
+import org.obsessive.web.engine.Scanner;
 import org.obsessive.web.lang.annotation.Component;
 import org.obsessive.web.lang.annotation.Controller;
 import org.obsessive.web.lang.annotation.Repository;
@@ -25,7 +26,7 @@ public class ClassFactory {
     public ClassFactory(Class<?> clazz) {
         annotationSet.addAll(Arrays.asList(Service.class, Controller.class, Repository.class, Component.class));
         //加载 clazz 目录同级别以及以下的类
-        CLASS_SET.addAll(Clazz.getClassSet(clazz.getPackage().getName()));
+        CLASS_SET.addAll(Scanner.getClassSet(clazz.getPackage().getName()));
     }
 
     /**
