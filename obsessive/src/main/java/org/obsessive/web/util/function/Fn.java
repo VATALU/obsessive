@@ -4,7 +4,9 @@ import org.obsessive.web.log.Record;
 import org.obsessive.web.util.Maps;
 import org.obsessive.web.util.function.executor.JvmExecutor;
 import org.obsessive.web.util.function.executor.Executor;
+import org.obsessive.web.util.function.executor.ObsessiveExecutor;
 import org.obsessive.web.util.function.supplier.JvmSupplier;
+import org.obsessive.web.util.function.supplier.ObsessiveSupplier;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -15,7 +17,6 @@ import java.util.function.Supplier;
 
 /**
  * wrapper of other functional utils
- *
  */
 public class Fn {
 
@@ -69,6 +70,17 @@ public class Fn {
         return Defend.safeGet(jvmSupplier, record);
     }
 
+
+    public static <T> T safeGet(final ObsessiveSupplier<T> supplier, final Record record) {
+        Objects.requireNonNull(supplier);
+        return Defend.safeGet(supplier, record);
+    }
+
+    public static void safeExec(final ObsessiveExecutor executor, final Record record) {
+        Objects.requireNonNull(executor);
+        Defend.safeExec(executor, record);
+    }
+
     //Obsessive wrapper
 
     /**
@@ -99,7 +111,6 @@ public class Fn {
     }
 
 
-
     /**
      * execute function only when params aren't null
      *
@@ -108,8 +119,7 @@ public class Fn {
      */
     public static void exec(final Executor executor, final Object... params) {
         Objects.requireNonNull(executor);
-        Obsessive.exec(executor,params);
+        Obsessive.exec(executor, params);
     }
-
 
 }
