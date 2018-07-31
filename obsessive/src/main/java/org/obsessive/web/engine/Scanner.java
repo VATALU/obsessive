@@ -36,28 +36,33 @@ public class Scanner {
         return annotatedClsSet.stream().collect(Collectors.toConcurrentMap(Class::getName, annotatedCls -> annotatedCls));
     }
 
-    public static ConcurrentMap<String, Object> inject(final ConcurrentMap<String, Class<?>> annotatedClsMap) {
+
+    public static ConcurrentMap<String, Object> getSingleton(final ConcurrentMap<String, Class<?>> annotatedClsMap) {
 
         final ConcurrentMap<String, Object> singletonBeans = new ConcurrentHashMap<>();
 
         annotatedClsMap.forEach((className, clazz) -> {
-            //TODO null detection
             Object bean = Reflections.instance(clazz);
             singletonBeans.put(className, bean);
         });
+
+        //set fields
         singletonBeans.forEach((className, bean) -> {
-            Field[] fields = bean.getClass().getFields();
-            Stream<Field> fieldStream = Arrays.stream(fields);
+            final Field[] fields = bean.getClass().getFields();
             //TODO
-            // @Inject
-            fieldStream.filter(field -> field.isAnnotationPresent(Inject.class)).forEach(field -> {
-                String fieldName = field.getName();
-                Object instance = singletonBeans.get(fieldName);
-                Reflections.setField(bean, field, instance);
-            });
-            // @Value
-            fieldStream.filter(field -> field.isAnnotationPresent(Value.class)).forEach(field ->
-                    Reflections.setField(bean, field, field.getAnnotation(Value.class).value()));
+            AnnotationConstant.FIELD_SETTER_MAP.forEach((clazz, fieldSetter) ->
+                    Arrays.stream(fields).filter(field -> field.isAnnotationPresent(clazz))
+                            .forEach(field -> fieldSetter.inject(singletonBeans, bean, field))
+                );
+//            // @Inject
+//            fieldStream.filter(field -> field.isAnnotationPresent(Inject.class)).forEach(field -> {
+//                String fieldName = field.getName();
+//                Object instance = singletonBeans.get(fieldName);
+//                Reflections.setField(bean, field, instance);
+//            });
+//            // @Value
+//            fieldStream.filter(field -> field.isAnnotationPresent(Value.class)).forEach(field ->
+//                    Reflections.setField(bean, field, field.getAnnotation(Value.class).value()));
         });
         return singletonBeans;
     }
