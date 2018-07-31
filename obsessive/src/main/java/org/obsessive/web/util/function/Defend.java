@@ -56,8 +56,8 @@ class Defend {
      * @param <T>
      * @return
      */
-    static <T> T safeGet(final ObsessiveSupplier<T> obsessiveSupplier,
-                         final Record record) {
+    static <T> T safeObseGet(final ObsessiveSupplier<T> obsessiveSupplier,
+                             final Record record) {
         T t = null;
         try {
             t = obsessiveSupplier.get();
@@ -74,8 +74,13 @@ class Defend {
         return t;
     }
 
-    static void safeExec(final ObsessiveExecutor obsessiveExecutor,
-                         final Record record) {
+    /**
+     *
+     * @param obsessiveExecutor
+     * @param record
+     */
+    static void safeObseExec(final ObsessiveExecutor obsessiveExecutor,
+                             final Record record) {
         try {
             obsessiveExecutor.execute();
         } catch (final ObsessiveException e) {

@@ -11,7 +11,9 @@ import java.util.function.Supplier;
 
 class Obsessive {
 
-    static <T> T get(final T defaultValue, final Supplier<T> supplier, final Object... params) {
+    static <T> T get(final T defaultValue,
+                     final Supplier<T> supplier,
+                     final Object... params) {
         if (params.length > 0) {
             final boolean match = Arrays.stream(params).allMatch(Objects::nonNull);
             if (match) {
@@ -24,7 +26,8 @@ class Obsessive {
         }
     }
 
-    static void exec(final Executor executor, final Object... params) {
+    static void exec(final Executor executor,
+                     final Object... params) {
         if (params.length > 0) {
             final boolean match = Arrays.stream(params).allMatch(Objects::nonNull);
             if (match) {

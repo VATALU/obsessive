@@ -26,7 +26,8 @@ public final class Reflections {
      * @param <T>
      * @return
      */
-    public static <T> T instance(final String className, Object... params) {
+    public static <T> T instance(final String className,
+                                 Object... params) {
         return instance(clazz(className), params);
     }
 
@@ -38,8 +39,9 @@ public final class Reflections {
      * @param <T>
      * @return
      */
-    public static <T> T instance(final Class<?> clazz, Object... params) {
-        final Object o = Fn.getJvm(LOGGER,() -> construct(clazz, params), clazz);
+    public static <T> T instance(final Class<?> clazz,
+                                 Object... params) {
+        final Object o = Fn.getJvm(LOGGER, () -> construct(clazz, params), clazz);
         return Fn.getJvm(LOGGER, () -> (T) o, o);
     }
 
@@ -52,7 +54,8 @@ public final class Reflections {
      * @param <T>
      * @return
      */
-    public static <T> T singleton(final String className, final Object... params) {
+    public static <T> T singleton(final String className,
+                                  final Object... params) {
         return singleton(clazz(className), params);
     }
 
@@ -65,7 +68,8 @@ public final class Reflections {
      * @param <T>
      * @return
      */
-    public static <T> T singleton(final Class<?> clazz, final Object... params) {
+    public static <T> T singleton(final Class<?> clazz,
+                                  final Object... params) {
         final Object o = Maps.increase(Storage.SINGLETON_BEANS, clazz.getName(), () -> instance(clazz, params));
         return Fn.getJvm(LOGGER, () -> (T) o, o);
     }
@@ -93,7 +97,8 @@ public final class Reflections {
      * @param <T>
      * @return
      */
-    private static <T> T construct(final Class<?> clazz, final Object... params) {
+    private static <T> T construct(final Class<?> clazz,
+                                   final Object... params) {
         return Fn.getJvm(LOGGER, () -> {
             T t = null;
             final Constructor<?>[] constructors = clazz.getDeclaredConstructors();
@@ -105,7 +110,7 @@ public final class Reflections {
                 //compare argument length
                 if (params.length == constructor.getParameterTypes().length) {
                     final Object o = constructor.newInstance(params);
-                    t = Fn.getJvm(LOGGER,() -> (T) o, o);
+                    t = Fn.getJvm(LOGGER, () -> (T) o, o);
                 }
             }
             return t;
@@ -121,7 +126,7 @@ public final class Reflections {
      */
     private static <T> T construct(final Class<?> clazz) {
         final Object o = Fn.getJvm(LOGGER, () -> ConstructorAccess.get(clazz).newInstance(), clazz);
-        return Fn.getJvm(LOGGER,() -> (T) o, o);
+        return Fn.getJvm(LOGGER, () -> (T) o, o);
     }
 
     /**
@@ -131,28 +136,33 @@ public final class Reflections {
      * @param interfaceClass
      * @return
      */
-    public static boolean isMatch(final Class<?> clazz, final Class<?> interfaceClass) {
+    public static boolean isMatch(final Class<?> clazz,
+                                  final Class<?> interfaceClass) {
         final Class<?>[] interfaces = clazz.getInterfaces();
         return Arrays.stream(interfaces).anyMatch(item -> Objects.equals(item, interfaceClass));
     }
 
-    public static <T> void setField(final Object instance, final String fieldName, final T value) {
+    public static <T> void setField(final Object instance,
+                                    final String fieldName,
+                                    final T value) {
         Fn.exec(() ->
                 Fn.safeExec(() -> {
                     FieldAccess fieldAccess = FieldAccess.get(instance.getClass());
-                    fieldAccess.set(instance,fieldName,value);
+                    fieldAccess.set(instance, fieldName, value);
                 }, LOGGER), instance, fieldName);
-    }
-
-    public static <T> void setField(final Object instance, final Field field, final T value) {
-        Fn.exec(() ->
-                Fn.safeExec(() -> {
-                    setField(instance,field.getName(),value);
-                }, LOGGER), field, value);
 
     }
 
-    public static <T> T invokeMethod(final Object instance, final String methodName, final Object... params) {
+    public static <T> void setField(final Object instance,
+                                    final Field field,
+                                    final T value) {
+        Fn.exec(() -> Fn.safeExec(() -> setField(instance, field.getName(), value), LOGGER), field, value);
+
+    }
+
+    public static <T> T invokeMethod(final Object instance,
+                                     final String methodName,
+                                     final Object... params) {
         return Fn.get(() -> {
             final MethodAccess access = MethodAccess.get(instance.getClass());
             Object result = null;
@@ -171,7 +181,9 @@ public final class Reflections {
         }, instance, params);
     }
 
-    public static <T> T invokeMethod(final Object instance, final Method method, final Object... params) {
+    public static <T> T invokeMethod(final Object instance,
+                                     final Method method,
+                                     final Object... params) {
         return Fn.get(() -> {
             final String methodName = method.getName();
             return Fn.get(() -> invokeMethod(instance, methodName, params), params, methodName);

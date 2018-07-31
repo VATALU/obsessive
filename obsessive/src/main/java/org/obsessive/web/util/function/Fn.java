@@ -1,18 +1,14 @@
 package org.obsessive.web.util.function;
 
 import org.obsessive.web.log.Record;
-import org.obsessive.web.util.Maps;
 import org.obsessive.web.util.function.executor.JvmExecutor;
 import org.obsessive.web.util.function.executor.Executor;
 import org.obsessive.web.util.function.executor.ObsessiveExecutor;
 import org.obsessive.web.util.function.supplier.JvmSupplier;
 import org.obsessive.web.util.function.supplier.ObsessiveSupplier;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentMap;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -41,7 +37,9 @@ public class Fn {
                                final Object... params) {
         //supplier mustn't null
         Objects.requireNonNull(jvmSupplier);
-        return Defend.getJvm(defaultVaule, Optional.ofNullable(record).orElse(LOGGER), jvmSupplier, params);
+        return Defend.getJvm(defaultVaule,
+                Optional.ofNullable(record).orElse(LOGGER),
+                jvmSupplier, params);
     }
 
     public static <T> T getJvm(final Record record,
@@ -56,7 +54,9 @@ public class Fn {
      * @param jvmExecutor
      * @param record
      */
-    public static void safeExec(final JvmExecutor jvmExecutor, final Record record) {
+    public static void safeExec(final JvmExecutor jvmExecutor,
+                                final Record record) {
+        Objects.requireNonNull(jvmExecutor);
         Defend.safeExec(jvmExecutor, record);
     }
 
@@ -66,19 +66,34 @@ public class Fn {
      * @param <T>
      * @return
      */
-    public static <T> T safeGet(final JvmSupplier<T> jvmSupplier, final Record record) {
+    public static <T> T safeGet(final JvmSupplier<T> jvmSupplier,
+                                final Record record) {
+        Objects.requireNonNull(jvmSupplier);
         return Defend.safeGet(jvmSupplier, record);
     }
 
-
-    public static <T> T safeGet(final ObsessiveSupplier<T> supplier, final Record record) {
-        Objects.requireNonNull(supplier);
-        return Defend.safeGet(supplier, record);
+    /**
+     *
+     * @param executor
+     * @param record
+     */
+    public static void safeObseExec(final ObsessiveExecutor executor,
+                                final Record record) {
+        Objects.requireNonNull(executor);
+        Defend.safeObseExec(executor, record);
     }
 
-    public static void safeExec(final ObsessiveExecutor executor, final Record record) {
-        Objects.requireNonNull(executor);
-        Defend.safeExec(executor, record);
+    /**
+     *
+     * @param supplier
+     * @param record
+     * @param <T>
+     * @return
+     */
+    public static <T> T safeObseGet(final ObsessiveSupplier<T> supplier,
+                                final Record record) {
+        Objects.requireNonNull(supplier);
+        return Defend.safeObseGet(supplier, record);
     }
 
     //Obsessive wrapper
@@ -92,7 +107,9 @@ public class Fn {
      * @param <T>
      * @return
      */
-    public static <T> T get(final T defaultValue, final Supplier<T> supplier, final Object... params) {
+    public static <T> T get(final T defaultValue,
+                            final Supplier<T> supplier,
+                            final Object... params) {
         Objects.requireNonNull(supplier);
         return Obsessive.get(defaultValue, supplier, params);
     }
@@ -106,7 +123,8 @@ public class Fn {
      * @param <T>
      * @return
      */
-    public static <T> T get(final Supplier<T> supplier, final Object... params) {
+    public static <T> T get(final Supplier<T> supplier,
+                            final Object... params) {
         return get(null, supplier, params);
     }
 
@@ -117,7 +135,8 @@ public class Fn {
      * @param executor
      * @param params
      */
-    public static void exec(final Executor executor, final Object... params) {
+    public static void exec(final Executor executor,
+                            final Object... params) {
         Objects.requireNonNull(executor);
         Obsessive.exec(executor, params);
     }

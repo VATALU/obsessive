@@ -22,10 +22,10 @@ public final class Annotations {
     public static ConcurrentMap<String, Annotation> get(final Class<?> clazz) {
         return Fn.get(() -> {
             final Annotation[] annotationes = clazz.getDeclaredAnnotations();
-            // Zapper
+            // zipper
             return Maps.zipper(annotationes,
-                    (item) -> item.annotationType().getName(),
-                    (item) -> item);
+                               (item) -> item.annotationType().getName(),
+                               (item) -> item);
         }, clazz);
     }
 
