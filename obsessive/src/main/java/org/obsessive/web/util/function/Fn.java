@@ -13,39 +13,76 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * wrapper of other functional utils
+ *
+ */
 public class Fn {
 
-    private static final Record RECORD = Record.get(Fn.class);
+    private static final Record LOGGER = Record.get(Fn.class);
 
-    public static <T> T getJvm(final JvmSupplier<T> supplier, final Object... params) {
-        return getJvm(null, supplier, params);
-    }
+    // Defend wrapper
 
     /**
      * only when params are all not null,it will return not null
      * if supplier.get is null,it will return default value
      *
-     * @param defaultValue
+     * @param defaultVaule
+     * @param record
+     * @param jvmSupplier
+     * @param params
+     * @param <T>
+     * @return
+     */
+    public static <T> T getJvm(final T defaultVaule,
+                               final Record record,
+                               final JvmSupplier<T> jvmSupplier,
+                               final Object... params) {
+        //supplier mustn't null
+        Objects.requireNonNull(jvmSupplier);
+        return Defend.getJvm(defaultVaule, Optional.ofNullable(record).orElse(LOGGER), jvmSupplier, params);
+    }
+
+    public static <T> T getJvm(final Record record,
+                               final JvmSupplier<T> jvmSupplier,
+                               final Object... params) {
+        return getJvm(null, record, jvmSupplier, params);
+    }
+
+    /**
+     * execute function throws throwable
+     *
+     * @param jvmExecutor
+     * @param record
+     */
+    public static void safeExec(final JvmExecutor jvmExecutor, final Record record) {
+        Defend.safeExec(jvmExecutor, record);
+    }
+
+    /**
+     * @param jvmSupplier
+     * @param record
+     * @param <T>
+     * @return
+     */
+    public static <T> T safeGet(final JvmSupplier<T> jvmSupplier, final Record record) {
+        return Defend.safeGet(jvmSupplier, record);
+    }
+
+    //Obsessive wrapper
+
+    /**
+     * if parmas arn't all not null,it will return default value
+     * then if supplier.get is null,it will return default value.
+     *
      * @param supplier
      * @param params
      * @param <T>
-     * @return T
+     * @return
      */
-    public static <T> T getJvm(final T defaultValue, final JvmSupplier<T> supplier, final Object... params) {
-        //TODO supplier mustn't null
+    public static <T> T get(final T defaultValue, final Supplier<T> supplier, final Object... params) {
         Objects.requireNonNull(supplier);
-        T t = null;
-        final boolean match = Arrays.stream(params).allMatch(Objects::nonNull);
-        //TODO why not call Defend.safeGet ?
-        try {
-            if (match) {
-                //TODO use Optional
-                t = Optional.ofNullable(supplier.get()).orElse(defaultValue);
-            }
-        } catch (Exception e) {
-            RECORD.error(e.toString());
-        }
-        return t;
+        return Obsessive.get(defaultValue, supplier, params);
     }
 
     /**
@@ -61,24 +98,7 @@ public class Fn {
         return get(null, supplier, params);
     }
 
-    /**
-     * if parmas arn't all null,it will return default value
-     * then if supplier.get is null,it will return default value.
-     *
-     * @param supplier
-     * @param params
-     * @param <T>
-     * @return
-     */
-    public static <T> T get(final T defaultValue, final Supplier<T> supplier, final Object... params) {
-        final boolean match = Arrays.stream(params).allMatch(Objects::nonNull);
-        if (match) {
-            final T ret = supplier.get();
-            return (ret == null) ? defaultValue : ret;
-        } else {
-            return defaultValue;
-        }
-    }
+
 
     /**
      * execute function only when params aren't null
@@ -87,35 +107,9 @@ public class Fn {
      * @param params
      */
     public static void exec(final Executor executor, final Object... params) {
-        if (params.length > 0) {
-            final boolean match = Arrays.stream(params).allMatch(Objects::nonNull);
-            if (match) {
-                executor.execute();
-            }
-        } else {
-            executor.execute();
-        }
+        Objects.requireNonNull(executor);
+        Obsessive.exec(executor,params);
     }
 
-    /**
-     * execute function throws throwable
-     *
-     * @param jvmExecutor
-     * @param record
-     */
-    public static void safeExec(final JvmExecutor jvmExecutor, final Record record) {
-        Defend.safeExec(jvmExecutor, record);
-    }
 
-    public static <K, V, E> ConcurrentMap<K, V> zipper(final E[] object, final Function<E, K> keyFunc, final Function<E, V> valueFunc) {
-        return Maps.zipper(Arrays.asList(object),keyFunc,valueFunc);
-    }
-
-    public static boolean is(final Object item) {
-        return item == null;
-    }
-
-    public static boolean not(final Object item) {
-        return !is(item);
-    }
 }

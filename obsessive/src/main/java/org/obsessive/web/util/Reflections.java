@@ -16,7 +16,7 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 public final class Reflections {
 
-    private static final Record RECORD = Record.get(Reflections.class);
+    private static final Record LOGGER = Record.get(Reflections.class);
 
     /**
      * create and return instance
@@ -39,8 +39,8 @@ public final class Reflections {
      * @return
      */
     public static <T> T instance(final Class<?> clazz, Object... params) {
-        final Object o = Fn.getJvm(() -> construct(clazz, params), clazz);
-        return Fn.getJvm(() -> (T) o, o);
+        final Object o = Fn.getJvm(LOGGER,() -> construct(clazz, params), clazz);
+        return Fn.getJvm(LOGGER, () -> (T) o, o);
     }
 
     /**
@@ -67,7 +67,7 @@ public final class Reflections {
      */
     public static <T> T singleton(final Class<?> clazz, final Object... params) {
         final Object o = Maps.increase(Storage.SINGLETON_BEANS, clazz.getName(), () -> instance(clazz, params));
-        return Fn.getJvm(() -> (T) o, o);
+        return Fn.getJvm(LOGGER, () -> (T) o, o);
     }
 
     /**
@@ -79,7 +79,9 @@ public final class Reflections {
     public static Class<?> clazz(final String className) {
         return Maps.increase(Storage.CLASSES, className,
                 () -> Fn.getJvm(
-                        () -> Clazz.getClassLoader().loadClass(className), className)
+                        LOGGER,
+                        () -> Clazz.getClassLoader().loadClass(className),
+                        className)
         );
     }
 
@@ -92,7 +94,7 @@ public final class Reflections {
      * @return
      */
     private static <T> T construct(final Class<?> clazz, final Object... params) {
-        return Fn.getJvm(() -> {
+        return Fn.getJvm(LOGGER, () -> {
             T t = null;
             final Constructor<?>[] constructors = clazz.getDeclaredConstructors();
             for (Constructor<?> constructor : constructors) {
@@ -103,7 +105,7 @@ public final class Reflections {
                 //compare argument length
                 if (params.length == constructor.getParameterTypes().length) {
                     final Object o = constructor.newInstance(params);
-                    t = Fn.getJvm(() -> (T) o, o);
+                    t = Fn.getJvm(LOGGER,() -> (T) o, o);
                 }
             }
             return t;
@@ -118,8 +120,8 @@ public final class Reflections {
      * @return
      */
     private static <T> T construct(final Class<?> clazz) {
-        final Object o = Fn.getJvm(() -> ConstructorAccess.get(clazz).newInstance(), clazz);
-        return Fn.getJvm(() -> (T) o, o);
+        final Object o = Fn.getJvm(LOGGER, () -> ConstructorAccess.get(clazz).newInstance(), clazz);
+        return Fn.getJvm(LOGGER,() -> (T) o, o);
     }
 
     /**
@@ -139,14 +141,14 @@ public final class Reflections {
                 Fn.safeExec(() -> {
                     FieldAccess fieldAccess = FieldAccess.get(instance.getClass());
                     fieldAccess.set(instance,fieldName,value);
-                }, RECORD), instance, fieldName);
+                }, LOGGER), instance, fieldName);
     }
 
     public static <T> void setField(final Object instance, final Field field, final T value) {
         Fn.exec(() ->
                 Fn.safeExec(() -> {
                     setField(instance,field.getName(),value);
-                }, RECORD), field, value);
+                }, LOGGER), field, value);
 
     }
 

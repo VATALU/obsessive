@@ -23,7 +23,7 @@ public final class Annotations {
         return Fn.get(() -> {
             final Annotation[] annotationes = clazz.getDeclaredAnnotations();
             // Zapper
-            return Fn.zipper(annotationes,
+            return Maps.zipper(annotationes,
                     (item) -> item.annotationType().getName(),
                     (item) -> item);
         }, clazz);

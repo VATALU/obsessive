@@ -1,5 +1,6 @@
 package org.obsessive.web.util;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +20,9 @@ public class Maps {
      * @param <V>
      * @return
      */
-    public static <K, V> V increase(final Map<K, V> kvMap, final K key, final Supplier<V> vSupplier) {
+    public static <K, V> V increase(final Map<K, V> kvMap,
+                                    final K key,
+                                    final Supplier<V> vSupplier) {
         V v = kvMap.get(key);
         if (v == null) {
             v = vSupplier.get();
@@ -40,7 +43,9 @@ public class Maps {
      * @param <E>
      * @return
      */
-    public static <K, V, E> ConcurrentMap<K, V> zipper(final Collection<E> object, final Function<E, K> keyFunc, final Function<E, V> valueFunc) {
+    public static <K, V, E> ConcurrentMap<K, V> zipper(final Collection<E> object,
+                                                       final Function<E, K> keyFunc,
+                                                       final Function<E, V> valueFunc) {
         final ConcurrentMap<K, V> kvConcurrentHashMap = new ConcurrentHashMap<>();
         if (object.size() > 0) {
             for (final E item : object) {
@@ -56,5 +61,9 @@ public class Maps {
         return kvConcurrentHashMap;
     }
 
-
+    public static <K,V,E> ConcurrentMap<K,V> zipper(final E[] object,
+                                                    final Function<E, K> keyFunc,
+                                                    final Function<E, V> valueFunc) {
+        return Maps.zipper(Arrays.asList(object), keyFunc, valueFunc);
+    }
 }
