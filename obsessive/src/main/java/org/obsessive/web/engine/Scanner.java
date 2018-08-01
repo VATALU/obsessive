@@ -1,8 +1,6 @@
 package org.obsessive.web.engine;
 
 import org.obsessive.web.entity.constant.AnnotationConstant;
-import org.obsessive.web.lang.annotation.*;
-import org.obsessive.web.lang.annotation.Value;
 import org.obsessive.web.log.Record;
 import org.obsessive.web.util.Annotations;
 import org.obsessive.web.util.Clazz;
@@ -20,7 +18,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Scanner {
 

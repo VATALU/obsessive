@@ -10,4 +10,5 @@ public interface Storage {
     //Classes
     ConcurrentMap<String, Class<?>> CLASSES = new ConcurrentHashMap<>();
 
+
 }
