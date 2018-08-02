@@ -46,7 +46,7 @@ public class Scanner {
         //set fields
         singletonBeans.forEach((className, bean) -> {
             final Field[] fields = bean.getClass().getFields();
-            //TODO
+
             AnnotationConstant.FIELD_SETTER_MAP.forEach((clazz, fieldSetter) ->
                     Arrays.stream(fields).filter(field -> field.isAnnotationPresent(clazz))
                             .forEach(field -> fieldSetter.inject(singletonBeans, bean, field))
