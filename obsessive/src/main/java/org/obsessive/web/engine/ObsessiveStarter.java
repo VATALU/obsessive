@@ -8,7 +8,7 @@ import org.obsessive.web.factory.ConfigFactory;
 import org.obsessive.web.log.Record;
 
 /**
- * 启动类
+ * starter
  */
 public class ObsessiveStarter {
 
