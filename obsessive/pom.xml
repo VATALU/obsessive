@@ -37,6 +37,13 @@
             <version>1.11.7</version>
         </dependency>
 
+        <!-- yaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.21</version>
+        </dependency>
+
     </dependencies>
 
     <build>

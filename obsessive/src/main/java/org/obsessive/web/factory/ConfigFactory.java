@@ -1,6 +1,7 @@
 package org.obsessive.web.factory;
 
 import org.obsessive.web.entity.constant.ConfigConstant;
+import org.obsessive.web.log.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +15,10 @@ import java.util.Properties;
 
 
 /**
- * 配置文件读取类
+ * config factory
  */
 public class ConfigFactory {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigFactory.class);
+    private static final Record LOGGER = Record.get(ConfigFactory.class);
 
     private static final Map<String, String> CONFIG_MAP;
 
