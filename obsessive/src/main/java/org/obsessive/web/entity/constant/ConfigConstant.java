@@ -2,7 +2,7 @@ package org.obsessive.web.entity.constant;
 
 public final class ConfigConstant {
 
-    public final static String CONFIG_FILE = "obsessive.yml";
+    public final static String CONFIG_FILE = "obsessive.properties";
 
     public final static String SERVER_PORT = "server.port";
 

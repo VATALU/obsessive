@@ -2,8 +2,6 @@ package org.obsessive.web.engine;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
-
-import org.obsessive.web.entity.config.ObsessiveOptions;
 import org.obsessive.web.factory.BeanFactory;
 import org.obsessive.web.factory.ClassFactory;
 import org.obsessive.web.factory.ConfigFactory;
